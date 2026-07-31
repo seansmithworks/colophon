@@ -7,16 +7,39 @@ and design system visualizer, with a source/render split view.
 
 | Read | Split | Split (dark) |
 | --- | --- | --- |
-| ![Read view](demo/md-reader-v3-read.png) | ![Split view](demo/md-reader-v3-split.png) | ![Split view, dark](demo/md-reader-v3-split-dark.png) |
+| ![Read view](docs/screenshots/read.png) | ![Split view](docs/screenshots/split.png) | ![Split view, dark](docs/screenshots/split-dark.png) |
 
 ## Install
 
-**Load unpacked (available now):**
+There are two ways to install Colophon. Pick one; they don't mix.
 
-1. Open `chrome://extensions`.
-2. Turn on **Developer mode** (top-right toggle).
-3. Click **Load unpacked** and select the `extension/` folder in this repo.
-4. Pin the Colophon action to the toolbar if you want quick access.
+**Route A: download the release (recommended for most people)**
+
+1. Go to the [latest release](https://github.com/seansmithworks/colophon/releases/latest)
+   and download `colophon-v0.3.0.zip`.
+2. Unzip it. This gives you a folder (e.g. `colophon-v0.3.0/`) with
+   `manifest.json` sitting directly at its root, no subfolder to drill
+   into.
+3. Open `chrome://extensions`.
+4. Turn on **Developer mode** (top-right toggle).
+5. Click **Load unpacked** and select that unzipped folder itself, the
+   one containing `manifest.json` directly.
+6. Pin the Colophon action to the toolbar if you want quick access.
+
+**Route B: clone the repo (for development)**
+
+1. Clone the repo: `git clone https://github.com/seansmithworks/colophon.git`
+2. Open `chrome://extensions`.
+3. Turn on **Developer mode** (top-right toggle).
+4. Click **Load unpacked** and select the `extension/` subfolder inside
+   the cloned repo, not the repo root. In the repo, `manifest.json` lives
+   one level down, inside `extension/`.
+5. Pin the Colophon action to the toolbar if you want quick access.
+
+Selecting the wrong folder is the single most likely failure here (Chrome's
+error message for it isn't helpful): the unzipped release folder has
+`manifest.json` at its root, the cloned repo has `manifest.json` inside
+`extension/`. Pick the folder that actually contains `manifest.json`.
 
 To use Colophon on local `.md` files, Chrome needs an extra permission
 (it blocks extensions from `file://` URLs by default):
@@ -33,12 +56,22 @@ it loads the same way in any Chromium-based browser that exposes
 `chrome://extensions` with a Developer mode / Load unpacked flow. It is
 confirmed working in [Dia](https://www.diabrowser.com/).
 
+## Try it
+
+Fastest way to see what Colophon does: after installing, open
+[vercel.com/design.md](https://vercel.com/design.md) and click the toolbar
+icon. That page links a stylesheet, so it arms the Design Lens too. A
+plain GitHub raw README also works, but since it links no stylesheet, it
+won't show a lens; that's expected, not a bug.
+
 ## Usage
 
 - Navigate to a page serving raw markdown (a `.md`/`.markdown` URL, a
   GitHub raw link, or a local file with file-URL access allowed).
 - Click the Colophon toolbar icon to transform the page. Click again (or
   the `x` in the reader's top bar) to restore the original page instantly.
+  On a page that isn't markdown, clicking the icon does nothing at all;
+  this is a quiet, by-design no-op, not an error.
 - **Read / Split**: Split shows the raw source beside the render with
   hover/click line correspondence, available above 1000px wide. Press `v`
   to cycle views (does nothing while typing in a field, or below 1000px).
