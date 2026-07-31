@@ -1,7 +1,7 @@
-// MD Reader — main content script (no modules)
+// Colophon — main content script (no modules)
 //
 // Orchestrates: stash the original page, parse the raw markdown, build the
-// reader DOM, wire up theme/lens/view toggles, TOC, the voiceover player,
+// reader DOM, wire up the view toggle/shortcut, TOC, the voiceover player,
 // and source<->render hover/click sync. Ported from demo/build.mjs +
 // demo/app.js, generalized to run at click-time against whatever markdown
 // document.detect.js found, instead of one baked Vercel file.
@@ -10,12 +10,12 @@
 
   // Re-clicking the toolbar action re-injects this file. If we already
   // bootstrapped on this page, just flip visibility instead of rebuilding.
-  if (window.__mdReaderToggle) {
-    window.__mdReaderToggle();
+  if (window.__colophonToggle) {
+    window.__colophonToggle();
     return;
   }
 
-  var P = window.MDReaderParser;
+  var P = window.ColophonParser;
   var escapeHtml = P.escapeHtml;
 
   function filenameFromUrl() {
@@ -67,21 +67,21 @@
 
   function playerHtml() {
     return (
-      '<footer class="player" id="mdreader-player">' +
+      '<footer class="player" id="colophon-player">' +
       '<div class="player-inner">' +
       '<div class="player-transport">' +
-      '<button type="button" id="mdreader-btn-prev" class="player-btn" aria-label="Previous paragraph" title="Previous paragraph">' +
+      '<button type="button" id="colophon-btn-prev" class="player-btn" aria-label="Previous paragraph" title="Previous paragraph">' +
       '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3" y="3" width="1.4" height="10" fill="currentColor"/><path d="M13 3.5L5.5 8L13 12.5V3.5Z" fill="currentColor"/></svg></button>' +
-      '<button type="button" id="mdreader-btn-playpause" class="player-btn player-btn-primary" aria-label="Play" aria-pressed="false" title="Play">' +
-      '<svg id="mdreader-icon-play" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 2.5L13.5 8L4 13.5V2.5Z" fill="currentColor"/></svg>' +
-      '<svg id="mdreader-icon-pause" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="display:none"><rect x="3.5" y="2.5" width="3" height="11" fill="currentColor"/><rect x="9.5" y="2.5" width="3" height="11" fill="currentColor"/></svg></button>' +
-      '<button type="button" id="mdreader-btn-next" class="player-btn" aria-label="Next paragraph" title="Next paragraph">' +
+      '<button type="button" id="colophon-btn-playpause" class="player-btn player-btn-primary" aria-label="Play" aria-pressed="false" title="Play">' +
+      '<svg id="colophon-icon-play" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 2.5L13.5 8L4 13.5V2.5Z" fill="currentColor"/></svg>' +
+      '<svg id="colophon-icon-pause" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="display:none"><rect x="3.5" y="2.5" width="3" height="11" fill="currentColor"/><rect x="9.5" y="2.5" width="3" height="11" fill="currentColor"/></svg></button>' +
+      '<button type="button" id="colophon-btn-next" class="player-btn" aria-label="Next paragraph" title="Next paragraph">' +
       '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="11.6" y="3" width="1.4" height="10" fill="currentColor"/><path d="M3 3.5L10.5 8L3 12.5V3.5Z" fill="currentColor"/></svg></button>' +
       "</div>" +
-      '<div class="player-status"><p class="player-now" id="mdreader-player-now">Voiceover ready</p></div>' +
+      '<div class="player-status"><p class="player-now" id="colophon-player-now">Voiceover ready</p></div>' +
       '<div class="player-settings">' +
-      '<label class="player-field"><span class="player-field-label">Voice</span><select id="mdreader-voice-select" class="player-select"></select></label>' +
-      '<label class="player-field"><span class="player-field-label">Speed</span><select id="mdreader-speed-select" class="player-select">' +
+      '<label class="player-field"><span class="player-field-label">Voice</span><select id="colophon-voice-select" class="player-select"></select><span class="player-voice-hint" id="colophon-voice-hint" hidden title="No Enhanced or Premium voice found. System Settings -> Accessibility -> Spoken Content -> System Voice -> Manage Voices -> download one. Ava, Evan, and Zoe are good picks.">Better voices available -&gt;</span></label>' +
+      '<label class="player-field"><span class="player-field-label">Speed</span><select id="colophon-speed-select" class="player-select">' +
       '<option value="0.8">0.8&times;</option><option value="1" selected>1&times;</option><option value="1.25">1.25&times;</option><option value="1.5">1.5&times;</option>' +
       "</select></label></div></div></footer>"
     );
@@ -124,29 +124,25 @@
       .join("");
 
     var root = document.createElement("div");
-    root.id = "mdreader-root";
+    root.id = "colophon-root";
     root.innerHTML =
-      '<div class="progress-track" aria-hidden="true"><div class="progress-fill" id="mdreader-progress-fill"></div></div>' +
+      '<div class="progress-track" aria-hidden="true"><div class="progress-fill" id="colophon-progress-fill"></div></div>' +
       '<header class="topbar"><div class="topbar-inner">' +
-      '<div class="topbar-brand"><svg class="brand-mark" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 12.5L8 2.5L14 12.5H2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="brand-name">MD Reader</span></div>' +
+      '<div class="topbar-brand"><svg class="brand-mark" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 12.5L8 2.5L14 12.5H2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg><span class="brand-name">Colophon</span></div>' +
       '<div class="topbar-controls">' +
-      '<div class="view-toggle" id="mdreader-view-toggle" role="group" aria-label="View">' +
-      '<button type="button" class="view-btn" data-view-btn="read" aria-pressed="true">Read</button>' +
-      '<button type="button" class="view-btn" data-view-btn="split" aria-pressed="false">Split</button></div>' +
-      '<button type="button" id="mdreader-lens-toggle" class="lens-toggle" aria-pressed="true" title="Toggle the Design Lens"><span>Lens</span></button>' +
-      '<div class="variant-toggle" role="group" aria-label="Reading theme">' +
-      '<button type="button" class="variant-btn" data-variant-btn="editorial" aria-pressed="true">Editorial</button>' +
-      '<button type="button" class="variant-btn" data-variant-btn="system" aria-pressed="false">System</button></div>' +
-      '<button type="button" id="mdreader-close" class="lens-toggle" title="Restore original page">&times;</button>' +
+      '<div class="view-toggle" id="colophon-view-toggle" role="group" aria-label="View">' +
+      '<button type="button" class="view-btn" data-view-btn="read" aria-pressed="true" title="Read (v)">Read</button>' +
+      '<button type="button" class="view-btn" data-view-btn="split" aria-pressed="false" title="Split (v)">Split</button></div>' +
+      '<button type="button" id="colophon-close" class="lens-toggle" title="Restore original page">&times;</button>' +
       "</div></div></header>" +
-      '<div class="layout" id="mdreader-layout">' +
-      '<aside class="source-pane" id="mdreader-source-pane" aria-label="Raw markdown source">' +
+      '<div class="layout" id="colophon-layout">' +
+      '<aside class="source-pane" id="colophon-source-pane" aria-label="Raw markdown source">' +
       buildSourcePaneHtml(raw) +
       "</aside>" +
-      '<nav class="toc" id="mdreader-toc" aria-label="Table of contents"><div class="toc-inner"><p class="toc-label">Contents</p><ol class="toc-list">' +
+      '<nav class="toc" id="colophon-toc" aria-label="Table of contents"><div class="toc-inner"><p class="toc-label">Contents</p><ol class="toc-list">' +
       tocHtml +
       "</ol></div></nav>" +
-      '<main class="doc" id="mdreader-doc">' +
+      '<main class="doc" id="colophon-doc">' +
       '<section class="masthead" data-block="true" data-lines="1-' +
       (parsed.bodyStartLine - 1 || 1) +
       '">' +
@@ -165,8 +161,8 @@
       readMinutes +
       " min read</p>" +
       "</section>" +
-      '<div id="mdreader-lens-mount"></div>' +
-      '<article class="doc-body" id="mdreader-doc-body">' +
+      '<div id="colophon-lens-mount"></div>' +
+      '<article class="doc-body" id="colophon-doc-body">' +
       parsed.bodyHtml +
       "</article>" +
       "</main></div>" +
@@ -178,13 +174,13 @@
   // ---------------------------------------------------------------------
   function wireReaderBehavior(root, parsed, raw, restoreFn) {
     var htmlEl = document.documentElement;
-    var docPane = root.querySelector("#mdreader-doc");
+    var docPane = root.querySelector("#colophon-doc");
 
     // progress bar
-    var progressFill = root.querySelector("#mdreader-progress-fill");
+    var progressFill = root.querySelector("#colophon-progress-fill");
     function updateProgress() {
       var ratio;
-      if (htmlEl.getAttribute("data-mdreader-view") === "split" && docPane) {
+      if (htmlEl.getAttribute("data-colophon-view") === "split" && docPane) {
         var maxSplit = docPane.scrollHeight - docPane.clientHeight;
         ratio =
           maxSplit > 0
@@ -204,41 +200,15 @@
       docPane.addEventListener("scroll", updateProgress, { passive: true });
     updateProgress();
 
-    // theme variant toggle
-    var variantBtns = root.querySelectorAll("[data-variant-btn]");
-    function setVariant(name) {
-      htmlEl.setAttribute("data-mdreader-variant", name);
-      variantBtns.forEach(function (btn) {
-        btn.setAttribute(
-          "aria-pressed",
-          btn.getAttribute("data-variant-btn") === name ? "true" : "false",
-        );
-      });
-    }
-    variantBtns.forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        setVariant(btn.getAttribute("data-variant-btn"));
-      });
-    });
-    setVariant("editorial");
-
-    // design lens toggle (block is injected async once the stylesheet fetch resolves)
-    var lensToggleBtn = root.querySelector("#mdreader-lens-toggle");
-    function setLensState(on) {
-      htmlEl.setAttribute("data-mdreader-lens", on ? "on" : "off");
-      lensToggleBtn.setAttribute("aria-pressed", on ? "true" : "false");
-    }
-    lensToggleBtn.addEventListener("click", function () {
-      setLensState(htmlEl.getAttribute("data-mdreader-lens") !== "on");
-    });
-    setLensState(true);
-
-    // view switcher (Read / Split)
+    // view switcher (Read / Split). VIEWS is an ordered cycle so the `v`
+    // shortcut and a future third view (e.g. a Lens-only tab) both just
+    // walk the array, no boolean flip to rework.
+    var VIEWS = ["read", "split"];
     var viewBtns = root.querySelectorAll("[data-view-btn]");
     var mqSplitAllowed = window.matchMedia("(min-width: 1001px)");
     function setView(name) {
       if (name === "split" && !mqSplitAllowed.matches) name = "read";
-      htmlEl.setAttribute("data-mdreader-view", name);
+      htmlEl.setAttribute("data-colophon-view", name);
       viewBtns.forEach(function (btn) {
         btn.setAttribute(
           "aria-pressed",
@@ -254,21 +224,46 @@
     });
     if (mqSplitAllowed.addEventListener) {
       mqSplitAllowed.addEventListener("change", function (e) {
-        if (!e.matches && htmlEl.getAttribute("data-mdreader-view") === "split")
+        if (!e.matches && htmlEl.getAttribute("data-colophon-view") === "split")
           setView("read");
       });
     }
     setView("read");
 
+    // `v` cycles Read <-> Split. No-ops while typing in a form control, and
+    // no-ops below the split threshold rather than switching to a view
+    // that's hidden at this width.
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "v" && e.key !== "V") return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (root.style.display === "none") return;
+      var active = document.activeElement;
+      if (active) {
+        var tag = active.tagName;
+        if (
+          tag === "INPUT" ||
+          tag === "SELECT" ||
+          tag === "TEXTAREA" ||
+          active.isContentEditable
+        )
+          return;
+      }
+      if (!mqSplitAllowed.matches) return;
+      var current = htmlEl.getAttribute("data-colophon-view");
+      var idx = VIEWS.indexOf(current);
+      if (idx === -1) idx = 0;
+      setView(VIEWS[(idx + 1) % VIEWS.length]);
+    });
+
     // close / restore original page
     root
-      .querySelector("#mdreader-close")
+      .querySelector("#colophon-close")
       .addEventListener("click", function () {
         restoreFn();
       });
 
     // ---- source <-> render correspondence (DevTools-style sync) --------
-    var sourcePaneEl = root.querySelector("#mdreader-source-pane");
+    var sourcePaneEl = root.querySelector("#colophon-source-pane");
     var blockEls = Array.prototype.slice.call(
       docPane.querySelectorAll("[data-lines]"),
     );
@@ -371,7 +366,7 @@
         el.classList.add("tts-mirror");
       });
       ttsMirrorEls = els;
-      if (htmlEl.getAttribute("data-mdreader-view") === "split" && els.length) {
+      if (htmlEl.getAttribute("data-colophon-view") === "split" && els.length) {
         els[0].scrollIntoView({ block: "center", behavior: "smooth" });
       }
     }
@@ -379,7 +374,7 @@
     // ---- table of contents active section tracking ----------------------
     var tocLinks = root.querySelectorAll(".toc-list a");
     var sectionHeadings = Array.prototype.slice.call(
-      root.querySelectorAll("#mdreader-doc-body h2"),
+      root.querySelectorAll("#colophon-doc-body h2"),
     );
     if (
       "IntersectionObserver" in window &&
@@ -411,14 +406,14 @@
     }
 
     // ---- voiceover player -------------------------------------------------
-    var playPauseBtn = root.querySelector("#mdreader-btn-playpause");
-    var prevBtn = root.querySelector("#mdreader-btn-prev");
-    var nextBtn = root.querySelector("#mdreader-btn-next");
-    var iconPlay = root.querySelector("#mdreader-icon-play");
-    var iconPause = root.querySelector("#mdreader-icon-pause");
-    var nowEl = root.querySelector("#mdreader-player-now");
-    var voiceSelect = root.querySelector("#mdreader-voice-select");
-    var speedSelect = root.querySelector("#mdreader-speed-select");
+    var playPauseBtn = root.querySelector("#colophon-btn-playpause");
+    var prevBtn = root.querySelector("#colophon-btn-prev");
+    var nextBtn = root.querySelector("#colophon-btn-next");
+    var iconPlay = root.querySelector("#colophon-icon-play");
+    var iconPause = root.querySelector("#colophon-icon-pause");
+    var nowEl = root.querySelector("#colophon-player-now");
+    var voiceSelect = root.querySelector("#colophon-voice-select");
+    var speedSelect = root.querySelector("#colophon-speed-select");
 
     var synthAvailable = "speechSynthesis" in window;
     if (!synthAvailable) {
@@ -434,7 +429,7 @@
 
     function getReadableBlocks() {
       var all = Array.prototype.slice.call(
-        root.querySelectorAll('#mdreader-doc-body [data-block="true"]'),
+        root.querySelectorAll('#colophon-doc-body [data-block="true"]'),
       );
       return all.filter(function (el) {
         return !el.closest(".code-block") && !el.closest("#design-lens");
@@ -445,35 +440,82 @@
     var isPlaying = false;
     var voices = [];
 
+    // Novelty voices confirmed present in the wild (macOS "fun" voices) —
+    // excluded so the picker isn't cluttered with unusable options. Siri
+    // voices are never exposed to the Web Speech API on any browser, so
+    // there is no "siri" match to look for here.
+    var NOVELTY_VOICE_NAMES = [
+      "bad news",
+      "bubbles",
+      "zarvox",
+      "trinoids",
+      "bells",
+      "wobble",
+    ];
+    function isNoveltyVoice(name) {
+      var n = String(name || "").toLowerCase();
+      for (var i = 0; i < NOVELTY_VOICE_NAMES.length; i++) {
+        if (n.indexOf(NOVELTY_VOICE_NAMES[i]) !== -1) return true;
+      }
+      return false;
+    }
+
+    var voiceHintEl = root.querySelector("#colophon-voice-hint");
+    var voiceHintShown = false;
+    function showVoiceHint() {
+      if (voiceHintShown) return;
+      voiceHintShown = true;
+      if (voiceHintEl) voiceHintEl.hidden = false;
+      htmlEl.setAttribute("data-colophon-voice-hint", "true");
+    }
+
     function populateVoices() {
-      voices = synth.getVoices();
-      if (!voices.length) return;
+      var allVoices = synth.getVoices();
+      if (!allVoices.length) return;
+
+      var english = allVoices.filter(function (v) {
+        return /^en/i.test(v.lang) && !isNoveltyVoice(v.name);
+      });
+      // Never leave the picker empty if nothing matched the English filter.
+      voices = english.length ? english : allVoices;
+
       var previousValue = voiceSelect.value;
       voiceSelect.innerHTML = "";
+
+      var highQuality = [];
+      var standard = [];
       voices.forEach(function (voice, i) {
-        var opt = document.createElement("option");
-        opt.value = String(i);
-        opt.textContent = voice.name + " (" + voice.lang + ")";
-        voiceSelect.appendChild(opt);
+        var entry = { voice: voice, index: i };
+        if (/premium|enhanced/i.test(voice.name)) highQuality.push(entry);
+        else standard.push(entry);
       });
-      var preferredIndex = voices.findIndex(function (v) {
-        var name = v.name.toLowerCase();
-        return (
-          v.lang === "en-US" &&
-          (name.indexOf("premium") !== -1 ||
-            name.indexOf("enhanced") !== -1 ||
-            name.indexOf("siri") !== -1)
-        );
-      });
-      if (preferredIndex === -1)
-        preferredIndex = voices.findIndex(function (v) {
-          return v.lang === "en-US";
+
+      function appendGroup(label, entries) {
+        if (!entries.length) return;
+        var group = document.createElement("optgroup");
+        group.label = label;
+        entries.forEach(function (entry) {
+          var opt = document.createElement("option");
+          opt.value = String(entry.index);
+          opt.textContent = entry.voice.name + " (" + entry.voice.lang + ")";
+          group.appendChild(opt);
         });
-      if (preferredIndex === -1) preferredIndex = 0;
+        voiceSelect.appendChild(group);
+      }
+      appendGroup("High quality", highQuality);
+      appendGroup("Standard", standard);
+
+      var preferredIndex = highQuality.length
+        ? highQuality[0].index
+        : standard.length
+          ? standard[0].index
+          : 0;
       voiceSelect.value =
         previousValue && voices[Number(previousValue)]
           ? previousValue
           : String(preferredIndex);
+
+      if (!highQuality.length) showVoiceHint();
     }
     populateVoices();
     if (typeof synth.onvoiceschanged !== "undefined")
@@ -578,21 +620,21 @@
     });
 
     // expose for the lens-injection step below to cancel/reset if needed
-    root.__mdReaderStop = stopReading;
+    root.__colophonStop = stopReading;
   }
 
   // ---------------------------------------------------------------------
   function activate() {
-    var rawText = window.__mdReaderRawText;
+    var rawText = window.__colophonRawText;
     if (rawText == null) {
       console.warn(
-        "[MD Reader] this page was not detected as a plain markdown/text document.",
+        "[Colophon] this page was not detected as a plain markdown/text document.",
       );
       return;
     }
 
     var originalContainer = document.createElement("div");
-    originalContainer.id = "mdreader-original";
+    originalContainer.id = "colophon-original";
     while (document.body.firstChild)
       originalContainer.appendChild(document.body.firstChild);
     originalContainer.style.display = "none";
@@ -608,7 +650,7 @@
         (parsed.frontmatter.title || parsed.frontmatter.name)) ||
       parsed.firstH1 ||
       humanize(filenameFromUrl());
-    document.title = readerTitle + " — MD Reader";
+    document.title = readerTitle + " — Colophon";
 
     var active = true;
     function restore() {
@@ -621,11 +663,11 @@
       } catch (e) {}
     }
 
-    window.__mdReaderToggle = function () {
+    window.__colophonToggle = function () {
       active = !active;
       originalContainer.style.display = active ? "none" : "";
       root.style.display = active ? "" : "none";
-      document.title = active ? readerTitle + " — MD Reader" : originalTitle;
+      document.title = active ? readerTitle + " — Colophon" : originalTitle;
       if (!active) {
         try {
           speechSynthesis.cancel();
@@ -639,15 +681,15 @@
     // initial render — if/when it resolves, splice it in right after the
     // masthead. If the doc links no stylesheet (or the stylesheet defines
     // no usable tokens), this resolves to "" and nothing is added.
-    var docBodyEl = root.querySelector("#mdreader-doc-body");
-    window.MDReaderLens.build(docBodyEl)
+    var docBodyEl = root.querySelector("#colophon-doc-body");
+    window.ColophonLens.build(docBodyEl)
       .then(function (lensHtml) {
         if (!lensHtml) return;
-        var mount = root.querySelector("#mdreader-lens-mount");
+        var mount = root.querySelector("#colophon-lens-mount");
         mount.innerHTML = lensHtml;
       })
       .catch(function (err) {
-        console.warn("[MD Reader] lens build failed:", err);
+        console.warn("[Colophon] lens build failed:", err);
       });
   }
 

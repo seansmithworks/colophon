@@ -4,7 +4,7 @@
 // Two jobs, run in sequence by `npm run package`:
 // 1. sync-version: copy package.json's "version" into extension/manifest.json
 //    so the two never drift (package.json is the single source of truth).
-// 2. package: zip extension/ into dist/md-reader-v<version>.zip, the exact
+// 2. package: zip extension/ into dist/colophon-v<version>.zip, the exact
 //    artifact a Chrome Web Store submission or a GitHub Release download
 //    needs. manifest.json must sit at the ZIP ROOT, not nested inside an
 //    "extension/" folder - that's the most common submission failure, so
@@ -39,7 +39,7 @@ function syncVersion() {
 
 function buildZip(version) {
   mkdirSync(distDir, { recursive: true });
-  const zipName = `md-reader-v${version}.zip`;
+  const zipName = `colophon-v${version}.zip`;
   const zipPath = path.join(distDir, zipName);
 
   if (existsSync(zipPath)) rmSync(zipPath);

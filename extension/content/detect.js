@@ -1,4 +1,4 @@
-// MD Reader — detector (content script)
+// Colophon — detector (content script)
 //
 // Runs on every page matching the manifest's markdown URL patterns. It does
 // NOT render anything. It only decides whether this page is Chrome's native
@@ -25,6 +25,6 @@
   }
 
   var pre = detect();
-  window.__mdReaderEligible = !!pre;
-  window.__mdReaderRawText = pre ? pre.textContent : null;
+  window.__colophonEligible = !!pre;
+  window.__colophonRawText = pre ? pre.textContent : null;
 })();

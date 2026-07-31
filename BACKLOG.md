@@ -1,22 +1,22 @@
 # Backlog
 
-Open items for MD Reader, seeded from release prep. Append one line per item
+Open items for Colophon, seeded from release prep. Append one line per item
 under the relevant section as you find things. No process beyond that.
 
 ## Design
 
-- Final icon design is Sean's call. The current `extension/icons/*.png` set
-  is a functional placeholder derived from the existing brand mark
-  (`content/reader.js:131`), not a finished identity.
-- README tagline/pitch copy needs Sean's voice pass before the repo goes
-  public (drafted plainly/factually for now, deliberately not marketing
-  copy).
+- Still open: final icon design is Sean's call. The current
+  `extension/icons/*.png` set is a functional placeholder derived from the
+  existing brand mark (`content/reader.js:131`), not a finished identity.
+- Still open: README tagline/pitch copy needs Sean's voice pass before the
+  repo goes public (drafted plainly/factually for now, deliberately not
+  marketing copy).
 - Masthead title provenance rule: currently prettifies frontmatter `name`.
   Proposed rule: frontmatter title -> H1 -> prettified name. Needs a
   decision and an implementation pass.
 - Decide Design Lens placement: in-flow block vs. right rail vs. a third
-  view tab, and whether the on/off toggle survives whichever of those is
-  chosen.
+  view tab. (The on/off toggle question is resolved as of 0.2.0: the Lens
+  is always on and simply doesn't render when no tokens are found.)
 
 ## Security / submission readiness
 
@@ -29,9 +29,30 @@ under the relevant section as you find things. No process beyond that.
 
 - Confirm Design Lens behavior when a local `file://` document links a
   local `.css` file. Unverified as of 0.1.0.
+- Verify whether Chrome on macOS 27 actually enumerates downloaded
+  Enhanced voices in the Web Speech API — the voice guidance added in
+  0.2.0 rests on this unverified assumption.
 
 ## Distribution
 
 - Firefox/AMO port as a possible free second channel (MV3 support in
   Firefox is not identical to Chrome's; needs a compatibility pass before
   committing to this).
+- `npx colophon <file.md>` CLI for local files, as a possible second
+  distribution form alongside the extension.
+
+## Design Lens
+
+- Multi-source token extraction so the Lens arms on YAML frontmatter and
+  markdown tables, not just linked stylesheets. Next major wave, planned.
+- "Source" theme mode: the reader body wears the document's declared
+  palette and font stack instead of the reader's own type system.
+- Token specimen ramps for radius, shadow, motion, and grid, alongside the
+  existing palette/type/spacing sections.
+
+## Known bugs
+
+- `content/md-parser.js` around line 80 stashes code spans as
+  `" C" + idx + " "` placeholder tokens. A document containing the literal
+  text ` C0 ` (or any ` C<n> `) outside backticks would collide with this
+  placeholder and get corrupted on restore. Not yet fixed.

@@ -1,4 +1,4 @@
-// MD Reader — runtime Design Lens (content script, no modules)
+// Colophon — runtime Design Lens (content script, no modules)
 //
 // Generalized port of demo/extract-tokens.mjs + demo/build-lens.mjs. Instead
 // of knowing about Vercel's --vbg-* namespace, it scans whatever stylesheet
@@ -12,7 +12,7 @@
 //   - remaining length values -> spacing bars
 // If the document links no stylesheet, or the stylesheet defines no custom
 // properties, the Lens simply does not appear — the reader still works.
-window.MDReaderLens = (function () {
+window.ColophonLens = (function () {
   "use strict";
 
   function fetchViaBackground(url) {
@@ -166,7 +166,14 @@ window.MDReaderLens = (function () {
   }
 
   // ---- DOM build ------------------------------------------------------------
+  // Both halves of the resolved value get interpolated into a style
+  // attribute below. Values used to come only from a fetched stylesheet;
+  // now that other document-derived sources are on the roadmap, validate
+  // each half against the same color regex used for classification and
+  // drop the swatch entirely if either half doesn't look like a color,
+  // rather than trusting the quote-stripping alone.
   function swatchHtml(t) {
+    if (!looksLikeColor(t.light) || !looksLikeColor(t.dark)) return "";
     return (
       '<div class="lens-swatch">' +
       '<span class="lens-swatch-box" style="--sw-light:' +
@@ -175,7 +182,7 @@ window.MDReaderLens = (function () {
       t.dark.replace(/"/g, "") +
       '"></span>' +
       '<span class="lens-swatch-name">' +
-      window.MDReaderParser.escapeHtml(t.name.replace(/^--/, "")) +
+      window.ColophonParser.escapeHtml(t.name.replace(/^--/, "")) +
       "</span></div>"
     );
   }
@@ -187,7 +194,7 @@ window.MDReaderLens = (function () {
       .map(function (group) {
         return (
           '<div class="lens-palette-group"><p class="lens-group-label">' +
-          window.MDReaderParser.escapeHtml(group.label) +
+          window.ColophonParser.escapeHtml(group.label) +
           '</p><div class="lens-swatch-row">' +
           group.swatches.map(swatchHtml).join("") +
           "</div></div>"
@@ -199,11 +206,11 @@ window.MDReaderLens = (function () {
       .map(function (t) {
         return (
           '<div class="lens-type-row"><span class="lens-type-role">' +
-          window.MDReaderParser.escapeHtml(t.name.replace(/^--/, "")) +
+          window.ColophonParser.escapeHtml(t.name.replace(/^--/, "")) +
           '</span><span class="lens-type-specimen" style="font-size:' +
           t.resolved +
           '">Set the reader\'s question</span><span class="lens-type-meta">' +
-          window.MDReaderParser.escapeHtml(t.resolved) +
+          window.ColophonParser.escapeHtml(t.resolved) +
           "</span></div>"
         );
       })
@@ -213,11 +220,11 @@ window.MDReaderLens = (function () {
       .map(function (t) {
         return (
           '<div class="lens-space-row"><span class="lens-space-label">' +
-          window.MDReaderParser.escapeHtml(t.name.replace(/^--/, "")) +
+          window.ColophonParser.escapeHtml(t.name.replace(/^--/, "")) +
           '</span><span class="lens-space-bar" style="width:' +
           t.resolved +
           '"></span><span class="lens-space-value">' +
-          window.MDReaderParser.escapeHtml(t.resolved) +
+          window.ColophonParser.escapeHtml(t.resolved) +
           "</span></div>"
         );
       })
@@ -233,7 +240,7 @@ window.MDReaderLens = (function () {
               '<div class="lens-asset-mount"><img class="lens-asset-svg" src="' +
               a.dataUri +
               '" alt="' +
-              window.MDReaderParser.escapeHtml(a.name) +
+              window.ColophonParser.escapeHtml(a.name) +
               '"></div>'
             );
           })
@@ -245,7 +252,7 @@ window.MDReaderLens = (function () {
       '<details class="lens" id="design-lens" open><summary class="lens-summary">' +
       '<span class="lens-summary-title">Design Lens</span>' +
       '<span class="lens-summary-meta">extracted from ' +
-      window.MDReaderParser.escapeHtml(model.stylesheetLabel) +
+      window.ColophonParser.escapeHtml(model.stylesheetLabel) +
       " &middot; " +
       model.extractedCount +
       ' tokens</span></summary><div class="lens-body">' +

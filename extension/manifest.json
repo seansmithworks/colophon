@@ -1,10 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "MD Reader",
-  "version": "0.1.0",
+  "name": "Colophon",
+  "version": "0.2.0",
   "description": "Turns raw markdown pages into a design-grade reader with voiceover, source/render split view, and a Design Lens for any stylesheet the document links.",
   "action": {
-    "default_title": "Toggle MD Reader",
+    "default_title": "Toggle Colophon",
     "default_icon": {
       "16": "icons/icon16.png",
       "32": "icons/icon32.png",
@@ -21,8 +21,14 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["activeTab", "scripting", "storage"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "content_scripts": [
     {
       "matches": [
@@ -31,7 +37,9 @@
         "file:///*.md",
         "file:///*.markdown"
       ],
-      "js": ["content/detect.js"],
+      "js": [
+        "content/detect.js"
+      ],
       "run_at": "document_end",
       "all_frames": false
     }

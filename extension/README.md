@@ -1,4 +1,4 @@
-# MD Reader - extension
+# Colophon - extension
 
 This folder is the unpacked Chrome MV3 extension. For install steps, usage,
 privacy, architecture, and known limitations, see the

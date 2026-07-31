@@ -1,4 +1,4 @@
-// MD Reader — background service worker (MV3)
+// Colophon — background service worker (MV3)
 //
 // Two jobs:
 // 1. Toolbar action click -> inject the reader bundle into the active tab
@@ -29,7 +29,7 @@ chrome.action.onClicked.addListener(async (tab) => {
     // CSS first so there's no flash of unstyled content once reader.js
     // (the last file in READER_FILES) builds and appends the reader DOM.
     // reader.js is idempotent: on a repeat injection it detects its own
-    // prior bootstrap (window.__mdReaderToggle) and just flips visibility
+    // prior bootstrap (window.__colophonToggle) and just flips visibility
     // instead of rebuilding, so no separate "toggle" message is needed.
     await chrome.scripting.insertCSS({
       target: { tabId: tab.id },
@@ -43,7 +43,7 @@ chrome.action.onClicked.addListener(async (tab) => {
     // Most common cause: the tab does not match our detector (not a plain
     // markdown/text page). Fail quietly rather than throwing in the SW.
     console.warn(
-      "[MD Reader] could not activate on this tab:",
+      "[Colophon] could not activate on this tab:",
       err && err.message,
     );
   }

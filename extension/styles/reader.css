@@ -1,16 +1,16 @@
-/* MD Reader extension styles — ported from demo/style.css.
-   Everything is scoped under #mdreader-root (our injected container) and
-   html[data-mdreader-*] attributes (not data-variant/data-view/data-lens,
+/* Colophon extension styles — ported from demo/style.css.
+   Everything is scoped under #colophon-root (our injected container) and
+   html[data-colophon-*] attributes (not data-variant/data-view/data-lens,
    to avoid any chance of colliding with attributes the host page already
    uses on <html>). Injected once via chrome.scripting.insertCSS before the
    reader DOM is built, so there's no flash of unstyled content. */
 
-#mdreader-root,
-#mdreader-root * {
+#colophon-root,
+#colophon-root * {
   box-sizing: border-box;
 }
 
-#mdreader-root {
+#colophon-root {
   --bg: #ffffff;
   --bg-raised: #ffffff;
   --fg: #16161a;
@@ -35,6 +35,10 @@
 
   --topbar-h: 44px;
   --player-h: 76px;
+  /* Fixed px (not ch) so the masthead, doc body, and lens share the exact
+     same left/right edge regardless of which font-family is in effect on
+     each of them. */
+  --content-max: 680px;
 
   color-scheme: light dark;
   display: block;
@@ -48,13 +52,13 @@
   font-family: var(--font-sans);
 }
 
-body:has(> #mdreader-root) {
+body:has(> #colophon-root) {
   margin: 0;
   padding: 0;
 }
 
 @media (prefers-color-scheme: dark) {
-  #mdreader-root {
+  #colophon-root {
     --bg: #0b0b0d;
     --bg-raised: #131316;
     --fg: #ededf0;
@@ -69,20 +73,20 @@ body:has(> #mdreader-root) {
   }
 }
 
-#mdreader-root ::selection {
+#colophon-root ::selection {
   background: #b6d5f5;
   color: #111;
 }
-#mdreader-root a {
+#colophon-root a {
   color: inherit;
 }
-#mdreader-root :focus-visible {
+#colophon-root :focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
 /* ---------- progress ---------- */
-#mdreader-root .progress-track {
+#colophon-root .progress-track {
   position: fixed;
   top: 0;
   left: 0;
@@ -91,7 +95,7 @@ body:has(> #mdreader-root) {
   background: transparent;
   z-index: 2147483000;
 }
-#mdreader-root .progress-fill {
+#colophon-root .progress-fill {
   height: 100%;
   width: 100%;
   background: var(--fg);
@@ -101,7 +105,7 @@ body:has(> #mdreader-root) {
 }
 
 /* ---------- topbar ---------- */
-#mdreader-root .topbar {
+#colophon-root .topbar {
   position: fixed;
   top: 2px;
   left: 0;
@@ -111,7 +115,7 @@ body:has(> #mdreader-root) {
   border-bottom: 1px solid var(--border);
   z-index: 2147482999;
 }
-#mdreader-root .topbar-inner {
+#colophon-root .topbar-inner {
   height: 100%;
   max-width: 1320px;
   margin: 0 auto;
@@ -120,36 +124,36 @@ body:has(> #mdreader-root) {
   align-items: center;
   justify-content: space-between;
 }
-#mdreader-root .topbar-brand {
+#colophon-root .topbar-brand {
   display: flex;
   align-items: center;
   gap: 8px;
   color: var(--fg-muted);
 }
-#mdreader-root .brand-mark {
+#colophon-root .brand-mark {
   color: var(--fg);
   flex: none;
 }
-#mdreader-root .brand-name {
+#colophon-root .brand-name {
   font-size: 12px;
   letter-spacing: 0.01em;
   font-weight: 500;
   color: var(--fg-muted);
 }
 
-#mdreader-root .topbar-controls {
+#colophon-root .topbar-controls {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-#mdreader-root .view-toggle {
+#colophon-root .view-toggle {
   display: inline-flex;
   border: 1px solid var(--border-strong);
   border-radius: 3px;
   overflow: hidden;
 }
-#mdreader-root .view-btn {
+#colophon-root .view-btn {
   appearance: none;
   border: none;
   background: transparent;
@@ -160,20 +164,20 @@ body:has(> #mdreader-root) {
   padding: 5px 10px;
   cursor: pointer;
 }
-#mdreader-root .view-btn + .view-btn {
+#colophon-root .view-btn + .view-btn {
   border-left: 1px solid var(--border-strong);
 }
-#mdreader-root .view-btn[aria-pressed="true"] {
+#colophon-root .view-btn[aria-pressed="true"] {
   background: var(--fg);
   color: var(--bg);
 }
 @media (max-width: 1000px) {
-  #mdreader-root .view-toggle {
+  #colophon-root .view-toggle {
     display: none;
   }
 }
 
-#mdreader-root .lens-toggle {
+#colophon-root .lens-toggle {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -187,39 +191,8 @@ body:has(> #mdreader-root) {
   padding: 5px 10px;
   cursor: pointer;
 }
-#mdreader-root .lens-toggle[aria-pressed="true"] {
-  background: var(--fg);
-  color: var(--bg);
-  border-color: var(--fg);
-}
-
-#mdreader-root .variant-toggle {
-  display: inline-flex;
-  border: 1px solid var(--border-strong);
-  border-radius: 3px;
-  overflow: hidden;
-}
-#mdreader-root .variant-btn {
-  appearance: none;
-  border: none;
-  background: transparent;
-  color: var(--fg-muted);
-  font: inherit;
-  font-size: 12px;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-family: var(--font-sans);
-}
-#mdreader-root .variant-btn + .variant-btn {
-  border-left: 1px solid var(--border-strong);
-}
-#mdreader-root .variant-btn[aria-pressed="true"] {
-  background: var(--fg);
-  color: var(--bg);
-}
-
 /* ---------- layout ---------- */
-#mdreader-root .layout {
+#colophon-root .layout {
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
   grid-template-areas: "toc main";
@@ -228,32 +201,32 @@ body:has(> #mdreader-root) {
   margin: 0 auto;
 }
 
-#mdreader-root .source-pane {
+#colophon-root .source-pane {
   display: none;
 }
 
-#mdreader-root .toc {
+#colophon-root .toc {
   display: none;
   grid-area: toc;
 }
-#mdreader-root .doc {
+#colophon-root .doc {
   grid-area: main;
 }
 
 /* ---------- split view ---------- */
-html[data-mdreader-view="split"] #mdreader-root .layout {
+html[data-colophon-view="split"] #colophon-root .layout {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-areas: "source main";
   height: calc(100vh - var(--topbar-h) - 2px - var(--player-h));
   align-items: stretch;
 }
-html[data-mdreader-view="split"] #mdreader-root .toc {
+html[data-colophon-view="split"] #colophon-root .toc {
   display: none;
 }
-html[data-mdreader-view="split"] #mdreader-root #design-lens {
+html[data-colophon-view="split"] #colophon-root #design-lens {
   display: none;
 }
-html[data-mdreader-view="split"] #mdreader-root .source-pane {
+html[data-colophon-view="split"] #colophon-root .source-pane {
   display: block;
   grid-area: source;
   height: 100%;
@@ -261,21 +234,21 @@ html[data-mdreader-view="split"] #mdreader-root .source-pane {
   border-right: 1px solid var(--border);
   background: var(--code-bg);
 }
-html[data-mdreader-view="split"] #mdreader-root .doc {
+html[data-colophon-view="split"] #colophon-root .doc {
   height: 100%;
   overflow-y: auto;
 }
 
 @media (min-width: 1101px) {
-  #mdreader-root .toc {
+  #colophon-root .toc {
     display: block;
   }
-  #mdreader-root .toc-inner {
+  #colophon-root .toc-inner {
     position: sticky;
     top: calc(var(--topbar-h) + 40px);
     padding: 40px 24px 40px 20px;
   }
-  #mdreader-root .toc-label {
+  #colophon-root .toc-label {
     font-family: var(--font-sans);
     font-size: 11px;
     text-transform: uppercase;
@@ -283,16 +256,16 @@ html[data-mdreader-view="split"] #mdreader-root .doc {
     color: var(--fg-faint);
     margin: 0 0 12px;
   }
-  #mdreader-root .toc-list {
+  #colophon-root .toc-list {
     list-style: none;
     margin: 0;
     padding: 0;
     border-left: 1px solid var(--border);
   }
-  #mdreader-root .toc-list li {
+  #colophon-root .toc-list li {
     margin: 0;
   }
-  #mdreader-root .toc-list a {
+  #colophon-root .toc-list a {
     display: block;
     padding: 5px 0 5px 14px;
     margin-left: -1px;
@@ -303,10 +276,10 @@ html[data-mdreader-view="split"] #mdreader-root .doc {
     color: var(--fg-muted);
     text-decoration: none;
   }
-  #mdreader-root .toc-list a:hover {
+  #colophon-root .toc-list a:hover {
     color: var(--fg);
   }
-  #mdreader-root .toc-list a.active {
+  #colophon-root .toc-list a.active {
     color: var(--fg);
     border-left-color: var(--fg);
     font-weight: 500;
@@ -314,24 +287,24 @@ html[data-mdreader-view="split"] #mdreader-root .doc {
 }
 
 @media (max-width: 1100px) {
-  #mdreader-root .layout {
+  #colophon-root .layout {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
-#mdreader-root .doc {
+#colophon-root .doc {
   min-width: 0;
   padding: 56px 24px 96px;
 }
 
 /* ---------- masthead ---------- */
-#mdreader-root .masthead {
-  max-width: 640px;
+#colophon-root .masthead {
+  max-width: var(--content-max);
   margin: 0 auto 56px;
   padding-bottom: 40px;
   border-bottom: 1px solid var(--border);
 }
-#mdreader-root .masthead-source {
+#colophon-root .masthead-source {
   font-family: var(--font-sans);
   font-size: 12px;
   color: var(--fg-faint);
@@ -339,11 +312,11 @@ html[data-mdreader-view="split"] #mdreader-root .doc {
   letter-spacing: 0.02em;
   margin: 0 0 16px;
 }
-#mdreader-root .masthead-dot {
+#colophon-root .masthead-dot {
   margin: 0 6px;
   color: var(--fg-faint);
 }
-#mdreader-root .masthead-title {
+#colophon-root .masthead-title {
   font-family: var(--font-sans);
   font-size: 34px;
   line-height: 1.15;
@@ -352,20 +325,20 @@ html[data-mdreader-view="split"] #mdreader-root .doc {
   margin: 0 0 16px;
   color: var(--fg);
 }
-#mdreader-root .masthead-abstract {
+#colophon-root .masthead-abstract {
   font-family: var(--font-serif);
   font-size: 18px;
   line-height: 1.55;
   color: var(--fg-muted);
   margin: 0 0 20px;
 }
-#mdreader-root .masthead-meta {
+#colophon-root .masthead-meta {
   font-family: var(--font-sans);
   font-size: 12px;
   color: var(--fg-faint);
   margin: 0;
 }
-#mdreader-root .masthead-meta code {
+#colophon-root .masthead-meta code {
   font-family: var(--font-mono);
   font-size: 11.5px;
   background: var(--code-bg);
@@ -373,54 +346,64 @@ html[data-mdreader-view="split"] #mdreader-root .doc {
   border-radius: 3px;
 }
 
-/* ---------- document body: shared ---------- */
-#mdreader-root .doc-body {
-  max-width: 640px;
+/* ---------- document body ---------- */
+#colophon-root .doc-body {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  line-height: 1.65;
+  max-width: var(--content-max);
   margin: 0 auto;
 }
-#mdreader-root .doc-body h1 {
+#colophon-root .doc-body h1 {
   display: none;
 }
 
-#mdreader-root .doc-body h2 {
+#colophon-root .doc-body h2 {
   margin: 2.6em 0 0.7em;
   font-weight: 600;
   letter-spacing: -0.01em;
+  font-family: var(--font-sans);
+  font-size: 24px;
 }
-#mdreader-root .doc-body h3 {
+#colophon-root .doc-body h3 {
   margin: 2em 0 0.6em;
   font-weight: 600;
+  font-family: var(--font-sans);
+  font-size: 19px;
 }
-#mdreader-root .doc-body h4 {
+#colophon-root .doc-body h4 {
   margin: 1.7em 0 0.5em;
   font-weight: 600;
   color: var(--fg-muted);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  text-transform: none;
 }
-#mdreader-root .doc-body h2:first-child,
-#mdreader-root .doc-body h3:first-child {
+#colophon-root .doc-body h2:first-child,
+#colophon-root .doc-body h3:first-child {
   margin-top: 0;
 }
 
-#mdreader-root .doc-body p {
+#colophon-root .doc-body p {
   margin: 0 0 1.1em;
 }
-#mdreader-root .doc-body ul,
-#mdreader-root .doc-body ol {
+#colophon-root .doc-body ul,
+#colophon-root .doc-body ol {
   margin: 0 0 1.1em;
   padding-left: 1.35em;
 }
-#mdreader-root .doc-body li {
+#colophon-root .doc-body li {
   margin: 0 0 0.45em;
 }
-#mdreader-root .doc-body li:last-child {
+#colophon-root .doc-body li:last-child {
   margin-bottom: 0;
 }
-#mdreader-root .doc-body li > ul,
-#mdreader-root .doc-body li > ol {
+#colophon-root .doc-body li > ul,
+#colophon-root .doc-body li > ol {
   margin-top: 0.45em;
 }
 
-#mdreader-root .doc-body code {
+#colophon-root .doc-body code {
   font-family: var(--font-mono);
   font-size: 0.86em;
   background: var(--code-bg);
@@ -428,59 +411,59 @@ html[data-mdreader-view="split"] #mdreader-root .doc {
   border-radius: 3px;
 }
 
-#mdreader-root .doc-body a {
+#colophon-root .doc-body a {
   text-decoration: underline;
   text-decoration-color: var(--border-strong);
   text-underline-offset: 2px;
 }
-#mdreader-root .doc-body a:hover {
+#colophon-root .doc-body a:hover {
   text-decoration-color: currentColor;
 }
 
-#mdreader-root .doc-body hr {
+#colophon-root .doc-body hr {
   border: none;
   border-top: 1px solid var(--border);
   margin: 3em 0;
 }
 
-#mdreader-root .doc-body img {
+#colophon-root .doc-body img {
   max-width: 100%;
   height: auto;
   border-radius: 4px;
   margin: 0.4em 0;
 }
 
-#mdreader-root .doc-body blockquote {
+#colophon-root .doc-body blockquote {
   margin: 0 0 1.3em;
   padding: 0.2em 0 0.2em 1em;
   border-left: 2px solid var(--border-strong);
   color: var(--fg-muted);
 }
-#mdreader-root .doc-body blockquote p {
+#colophon-root .doc-body blockquote p {
   margin: 0;
 }
 
-#mdreader-root .doc-body .table-wrap {
+#colophon-root .doc-body .table-wrap {
   margin: 0 0 1.3em;
   overflow-x: auto;
 }
-#mdreader-root .doc-body table {
+#colophon-root .doc-body table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.92em;
 }
-#mdreader-root .doc-body th,
-#mdreader-root .doc-body td {
+#colophon-root .doc-body th,
+#colophon-root .doc-body td {
   border: 1px solid var(--border);
   padding: 6px 10px;
   text-align: left;
 }
-#mdreader-root .doc-body th {
+#colophon-root .doc-body th {
   background: var(--code-bg);
   font-weight: 600;
 }
 
-#mdreader-root .doc-body pre.code-block {
+#colophon-root .doc-body pre.code-block {
   margin: 0 0 1.3em;
   padding: 14px 16px;
   background: var(--code-bg);
@@ -491,13 +474,13 @@ html[data-mdreader-view="split"] #mdreader-root .doc {
   line-height: 1.55;
   position: relative;
 }
-#mdreader-root .doc-body pre.code-block code {
+#colophon-root .doc-body pre.code-block code {
   background: none;
   padding: 0;
   font-size: inherit;
   color: var(--fg);
 }
-#mdreader-root .doc-body pre.code-block[data-lang]:not([data-lang=""])::before {
+#colophon-root .doc-body pre.code-block[data-lang]:not([data-lang=""])::before {
   content: attr(data-lang);
   display: block;
   font-family: var(--font-sans);
@@ -508,74 +491,15 @@ html[data-mdreader-view="split"] #mdreader-root .doc {
   margin-bottom: 10px;
 }
 
-#mdreader-root .reading-active {
+#colophon-root .reading-active {
   background: var(--read-tint);
   border-radius: 3px;
   box-shadow: 0 0 0 6px var(--read-tint);
   transition: background 0.15s ease;
 }
 
-/* ---------- editorial variant ---------- */
-html[data-mdreader-variant="editorial"] #mdreader-root .doc-body {
-  font-family: var(--font-serif);
-  font-size: 19px;
-  line-height: 1.65;
-  max-width: 66ch;
-}
-html[data-mdreader-variant="editorial"] #mdreader-root .masthead {
-  max-width: 66ch;
-}
-html[data-mdreader-variant="editorial"] #mdreader-root .doc-body h2 {
-  font-family: var(--font-sans);
-  font-size: 24px;
-}
-html[data-mdreader-variant="editorial"] #mdreader-root .doc-body h3 {
-  font-family: var(--font-sans);
-  font-size: 19px;
-}
-html[data-mdreader-variant="editorial"] #mdreader-root .doc-body h4 {
-  font-family: var(--font-sans);
-  font-size: 15px;
-  text-transform: none;
-}
-
-/* ---------- system variant ---------- */
-html[data-mdreader-variant="system"] #mdreader-root .doc-body {
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.6;
-  max-width: 62ch;
-}
-html[data-mdreader-variant="system"] #mdreader-root .masthead {
-  max-width: 62ch;
-}
-html[data-mdreader-variant="system"] #mdreader-root .masthead-title {
-  font-size: 30px;
-}
-html[data-mdreader-variant="system"] #mdreader-root .masthead-abstract {
-  font-family: var(--font-sans);
-  font-size: 15.5px;
-}
-html[data-mdreader-variant="system"] #mdreader-root .doc-body h2 {
-  font-size: 21px;
-  padding-bottom: 0.4em;
-  border-bottom: 1px solid var(--border);
-}
-html[data-mdreader-variant="system"] #mdreader-root .doc-body h3 {
-  font-size: 17px;
-}
-html[data-mdreader-variant="system"] #mdreader-root .doc-body h4 {
-  font-size: 12.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-html[data-mdreader-variant="system"] #mdreader-root .doc-body p,
-html[data-mdreader-variant="system"] #mdreader-root .doc-body li {
-  font-size: 15.5px;
-}
-
 /* ---------- player ---------- */
-#mdreader-root .player {
+#colophon-root .player {
   position: fixed;
   left: 0;
   bottom: 0;
@@ -585,7 +509,7 @@ html[data-mdreader-variant="system"] #mdreader-root .doc-body li {
   border-top: 1px solid var(--border);
   z-index: 2147482999;
 }
-#mdreader-root .player-inner {
+#colophon-root .player-inner {
   height: 100%;
   max-width: 1320px;
   margin: 0 auto;
@@ -596,12 +520,12 @@ html[data-mdreader-variant="system"] #mdreader-root .doc-body li {
   gap: 20px;
 }
 
-#mdreader-root .player-transport {
+#colophon-root .player-transport {
   display: flex;
   align-items: center;
   gap: 4px;
 }
-#mdreader-root .player-btn {
+#colophon-root .player-btn {
   appearance: none;
   border: 1px solid var(--border-strong);
   background: var(--bg);
@@ -614,25 +538,25 @@ html[data-mdreader-variant="system"] #mdreader-root .doc-body li {
   justify-content: center;
   cursor: pointer;
 }
-#mdreader-root .player-btn:hover {
+#colophon-root .player-btn:hover {
   border-color: var(--fg);
 }
-#mdreader-root .player-btn-primary {
+#colophon-root .player-btn-primary {
   width: 36px;
   height: 36px;
   background: var(--fg);
   color: var(--bg);
   border-color: var(--fg);
 }
-#mdreader-root .player-btn[disabled] {
+#colophon-root .player-btn[disabled] {
   opacity: 0.35;
   cursor: not-allowed;
 }
 
-#mdreader-root .player-status {
+#colophon-root .player-status {
   min-width: 0;
 }
-#mdreader-root .player-now {
+#colophon-root .player-now {
   margin: 0;
   font-size: 12.5px;
   color: var(--fg-muted);
@@ -642,23 +566,23 @@ html[data-mdreader-variant="system"] #mdreader-root .doc-body li {
   text-overflow: ellipsis;
 }
 
-#mdreader-root .player-settings {
+#colophon-root .player-settings {
   display: flex;
   align-items: center;
   gap: 16px;
 }
-#mdreader-root .player-field {
+#colophon-root .player-field {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
-#mdreader-root .player-field-label {
+#colophon-root .player-field-label {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--fg-faint);
 }
-#mdreader-root .player-select {
+#colophon-root .player-select {
   font: inherit;
   font-family: var(--font-sans);
   font-size: 12px;
@@ -669,34 +593,46 @@ html[data-mdreader-variant="system"] #mdreader-root .doc-body li {
   padding: 4px 6px;
   max-width: 160px;
 }
+#colophon-root .player-voice-hint {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 9.5px;
+  color: var(--fg-faint);
+  cursor: help;
+  text-decoration: underline dotted;
+  text-decoration-color: var(--border-strong);
+}
+#colophon-root .player-voice-hint[hidden] {
+  display: none;
+}
+/* Grows the footer slightly to fit the one-time voice hint without
+   overlapping the player controls. */
+html[data-colophon-voice-hint="true"] #colophon-root {
+  --player-h: 92px;
+}
 
 @media (max-width: 700px) {
-  #mdreader-root .player-field:first-of-type {
+  #colophon-root .player-field:first-of-type {
     display: none;
   }
-  #mdreader-root .player-now {
+  #colophon-root .player-now {
     display: none;
   }
-  #mdreader-root .player-inner {
+  #colophon-root .player-inner {
     grid-template-columns: auto 1fr auto;
   }
 }
 
 /* ---------- design lens ---------- */
-html[data-mdreader-lens="off"] #mdreader-root #design-lens,
-html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
-  display: none;
-}
-
-#mdreader-root .lens {
-  max-width: 760px;
+#colophon-root .lens {
+  max-width: var(--content-max);
   margin: 0 auto 56px;
   border: 1px solid var(--border);
   border-radius: 4px;
   background: var(--bg-raised);
 }
 
-#mdreader-root .lens-summary {
+#colophon-root .lens-summary {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
@@ -706,30 +642,30 @@ html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
   list-style: none;
   font-family: var(--font-sans);
 }
-#mdreader-root .lens-summary::-webkit-details-marker {
+#colophon-root .lens-summary::-webkit-details-marker {
   display: none;
 }
-#mdreader-root .lens-summary::before {
+#colophon-root .lens-summary::before {
   content: "\2013";
   display: inline-block;
   width: 12px;
   margin-right: 8px;
   color: var(--fg-faint);
 }
-#mdreader-root .lens[open] > .lens-summary::before {
+#colophon-root .lens[open] > .lens-summary::before {
   content: "\2212";
 }
-#mdreader-root .lens:not([open]) > .lens-summary::before {
+#colophon-root .lens:not([open]) > .lens-summary::before {
   content: "+";
 }
 
-#mdreader-root .lens-summary-title {
+#colophon-root .lens-summary-title {
   font-size: 13px;
   font-weight: 600;
   color: var(--fg);
   flex: none;
 }
-#mdreader-root .lens-summary-meta {
+#colophon-root .lens-summary-meta {
   font-size: 11.5px;
   color: var(--fg-faint);
   white-space: nowrap;
@@ -737,12 +673,12 @@ html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
   text-overflow: ellipsis;
 }
 
-#mdreader-root .lens-body {
+#colophon-root .lens-body {
   padding: 4px 18px 24px;
   border-top: 1px solid var(--border);
 }
 
-#mdreader-root .lens-disclosure {
+#colophon-root .lens-disclosure {
   font-family: var(--font-sans);
   font-size: 11.5px;
   font-style: italic;
@@ -750,14 +686,14 @@ html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
   margin: 14px 0 28px;
 }
 
-#mdreader-root .lens-section {
+#colophon-root .lens-section {
   margin: 0 0 32px;
 }
-#mdreader-root .lens-section:last-child {
+#colophon-root .lens-section:last-child {
   margin-bottom: 0;
 }
 
-#mdreader-root .lens-heading {
+#colophon-root .lens-heading {
   font-family: var(--font-sans);
   font-size: 11px;
   text-transform: uppercase;
@@ -767,38 +703,38 @@ html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
   margin: 0 0 6px;
 }
 
-#mdreader-root .lens-dot {
+#colophon-root .lens-dot {
   margin: 0 5px;
   color: var(--fg-faint);
 }
 
-#mdreader-root .lens-palette {
+#colophon-root .lens-palette {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
-#mdreader-root .lens-palette-group + .lens-palette-group {
+#colophon-root .lens-palette-group + .lens-palette-group {
   margin-top: 0;
 }
-#mdreader-root .lens-group-label {
+#colophon-root .lens-group-label {
   font-family: var(--font-sans);
   font-size: 11px;
   color: var(--fg-faint);
   margin: 0 0 8px;
 }
-#mdreader-root .lens-swatch-row {
+#colophon-root .lens-swatch-row {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
-#mdreader-root .lens-swatch {
+#colophon-root .lens-swatch {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 5px;
   width: 62px;
 }
-#mdreader-root .lens-swatch-box {
+#colophon-root .lens-swatch-box {
   display: block;
   width: 44px;
   height: 44px;
@@ -810,7 +746,7 @@ html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
     var(--sw-dark) 50%
   );
 }
-#mdreader-root .lens-swatch-name {
+#colophon-root .lens-swatch-name {
   font-family: var(--font-mono);
   font-size: 9.5px;
   color: var(--fg-faint);
@@ -819,11 +755,11 @@ html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
   word-break: break-word;
 }
 
-#mdreader-root .lens-type-list {
+#colophon-root .lens-type-list {
   display: flex;
   flex-direction: column;
 }
-#mdreader-root .lens-type-row {
+#colophon-root .lens-type-row {
   display: grid;
   grid-template-columns: 120px 1fr auto;
   align-items: baseline;
@@ -831,65 +767,65 @@ html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
   padding: 10px 0;
   border-top: 1px solid var(--border);
 }
-#mdreader-root .lens-type-row:first-child {
+#colophon-root .lens-type-row:first-child {
   border-top: none;
 }
-#mdreader-root .lens-type-role {
+#colophon-root .lens-type-role {
   font-family: var(--font-mono);
   font-size: 10.5px;
   color: var(--fg-faint);
 }
-#mdreader-root .lens-type-specimen {
+#colophon-root .lens-type-specimen {
   font-family: var(--font-sans);
   color: var(--fg);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-#mdreader-root .lens-type-meta {
+#colophon-root .lens-type-meta {
   font-family: var(--font-mono);
   font-size: 10.5px;
   color: var(--fg-faint);
   white-space: nowrap;
 }
 
-#mdreader-root .lens-space-list {
+#colophon-root .lens-space-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-#mdreader-root .lens-space-row {
+#colophon-root .lens-space-row {
   display: grid;
   grid-template-columns: 96px 1fr 56px;
   align-items: center;
   gap: 12px;
 }
-#mdreader-root .lens-space-label {
+#colophon-root .lens-space-label {
   font-family: var(--font-mono);
   font-size: 10.5px;
   color: var(--fg-faint);
 }
-#mdreader-root .lens-space-bar {
+#colophon-root .lens-space-bar {
   height: 8px;
   background: var(--fg);
   opacity: 0.85;
   border-radius: 1px;
   max-width: 100%;
 }
-#mdreader-root .lens-space-value {
+#colophon-root .lens-space-value {
   font-family: var(--font-mono);
   font-size: 10.5px;
   color: var(--fg-faint);
   text-align: right;
 }
 
-#mdreader-root .lens-asset-row {
+#colophon-root .lens-asset-row {
   display: flex;
   align-items: center;
   gap: 20px;
   flex-wrap: wrap;
 }
-#mdreader-root .lens-asset-mount {
+#colophon-root .lens-asset-mount {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -898,7 +834,7 @@ html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
   border-radius: 4px;
   background: var(--code-bg);
 }
-#mdreader-root .lens-asset-svg {
+#colophon-root .lens-asset-svg {
   display: block;
   max-height: 28px;
   max-width: 140px;
@@ -906,7 +842,7 @@ html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
   height: auto;
 }
 
-#mdreader-root .lens-chip {
+#colophon-root .lens-chip {
   display: inline-block;
   width: 11px;
   height: 11px;
@@ -922,7 +858,7 @@ html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
 }
 
 /* ---------- source pane (split view) ---------- */
-#mdreader-root .source-pane-inner {
+#colophon-root .source-pane-inner {
   margin: 0;
   padding: 0 0 40px;
   font-family: var(--font-mono);
@@ -931,12 +867,12 @@ html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
   white-space: pre-wrap;
   word-break: break-word;
 }
-#mdreader-root .src-line {
+#colophon-root .src-line {
   display: flex;
   padding: 0 16px;
   border-left: 2px solid transparent;
 }
-#mdreader-root .src-line-no {
+#colophon-root .src-line-no {
   flex: none;
   width: 34px;
   color: var(--fg-faint);
@@ -944,24 +880,24 @@ html[data-mdreader-lens="off"] #mdreader-root .lens-chip {
   text-align: right;
   margin-right: 14px;
 }
-#mdreader-root .src-line-text {
+#colophon-root .src-line-text {
   flex: 1;
   min-width: 0;
   color: var(--fg-muted);
 }
 
-#mdreader-root .src-line.sync-hover,
-#mdreader-root [data-lines].sync-hover {
+#colophon-root .src-line.sync-hover,
+#colophon-root [data-lines].sync-hover {
   background: var(--read-tint);
 }
-#mdreader-root .src-line.sync-hover {
+#colophon-root .src-line.sync-hover {
   border-left-color: var(--fg-faint);
 }
-#mdreader-root [data-lines].sync-hover {
+#colophon-root [data-lines].sync-hover {
   border-radius: 3px;
 }
 
-#mdreader-root .src-line.tts-mirror {
+#colophon-root .src-line.tts-mirror {
   background: var(--read-tint);
   border-left-color: var(--fg);
 }
