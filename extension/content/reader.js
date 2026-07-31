@@ -1,10 +1,10 @@
 // Colophon — main content script (no modules)
 //
 // Orchestrates: stash the original page, parse the raw markdown, build the
-// reader DOM, wire up the view toggle/shortcut, TOC, the voiceover player,
-// and source<->render hover/click sync. Ported from demo/build.mjs +
-// demo/app.js, generalized to run at click-time against whatever markdown
-// document.detect.js found, instead of one baked Vercel file.
+// reader DOM, wire up the view toggle/shortcut, TOC, and source<->render
+// hover/click sync. Ported from demo/build.mjs + demo/app.js, generalized
+// to run at click-time against whatever markdown document.detect.js found,
+// instead of one baked Vercel file.
 (function () {
   "use strict";
 
@@ -65,28 +65,6 @@
     );
   }
 
-  function playerHtml() {
-    return (
-      '<footer class="player" id="colophon-player">' +
-      '<div class="player-inner">' +
-      '<div class="player-transport">' +
-      '<button type="button" id="colophon-btn-prev" class="player-btn" aria-label="Previous paragraph" title="Previous paragraph">' +
-      '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3" y="3" width="1.4" height="10" fill="currentColor"/><path d="M13 3.5L5.5 8L13 12.5V3.5Z" fill="currentColor"/></svg></button>' +
-      '<button type="button" id="colophon-btn-playpause" class="player-btn player-btn-primary" aria-label="Play" aria-pressed="false" title="Play">' +
-      '<svg id="colophon-icon-play" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 2.5L13.5 8L4 13.5V2.5Z" fill="currentColor"/></svg>' +
-      '<svg id="colophon-icon-pause" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="display:none"><rect x="3.5" y="2.5" width="3" height="11" fill="currentColor"/><rect x="9.5" y="2.5" width="3" height="11" fill="currentColor"/></svg></button>' +
-      '<button type="button" id="colophon-btn-next" class="player-btn" aria-label="Next paragraph" title="Next paragraph">' +
-      '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="11.6" y="3" width="1.4" height="10" fill="currentColor"/><path d="M3 3.5L10.5 8L3 12.5V3.5Z" fill="currentColor"/></svg></button>' +
-      "</div>" +
-      '<div class="player-status"><p class="player-now" id="colophon-player-now">Voiceover ready</p></div>' +
-      '<div class="player-settings">' +
-      '<label class="player-field"><span class="player-field-label">Voice</span><select id="colophon-voice-select" class="player-select"></select><span class="player-voice-hint" id="colophon-voice-hint" hidden title="No Enhanced or Premium voice found. System Settings -> Accessibility -> Spoken Content -> System Voice -> Manage Voices -> download one. Ava, Evan, and Zoe are good picks.">Better voices available -&gt;</span></label>' +
-      '<label class="player-field"><span class="player-field-label">Speed</span><select id="colophon-speed-select" class="player-select">' +
-      '<option value="0.8">0.8&times;</option><option value="1" selected>1&times;</option><option value="1.25">1.25&times;</option><option value="1.5">1.5&times;</option>' +
-      "</select></label></div></div></footer>"
-    );
-  }
-
   function buildReaderRoot(parsed, raw) {
     var titleSource =
       (parsed.frontmatter &&
@@ -143,7 +121,7 @@
       tocHtml +
       "</ol></div></nav>" +
       '<main class="doc" id="colophon-doc">' +
-      '<section class="masthead" data-block="true" data-lines="1-' +
+      '<section class="masthead" data-lines="1-' +
       (parsed.bodyStartLine - 1 || 1) +
       '">' +
       '<p class="masthead-source">' +
@@ -165,8 +143,7 @@
       '<article class="doc-body" id="colophon-doc-body">' +
       parsed.bodyHtml +
       "</article>" +
-      "</main></div>" +
-      playerHtml();
+      "</main></div>";
 
     return root;
   }
@@ -351,26 +328,6 @@
       alignRenderToBlock(block);
     });
 
-    var ttsMirrorEls = [];
-    function clearSourceMirror() {
-      ttsMirrorEls.forEach(function (el) {
-        el.classList.remove("tts-mirror");
-      });
-      ttsMirrorEls = [];
-    }
-    function mirrorToSource(block) {
-      clearSourceMirror();
-      if (!block || !block.hasAttribute("data-lines")) return;
-      var els = getSourceLineEls(block);
-      els.forEach(function (el) {
-        el.classList.add("tts-mirror");
-      });
-      ttsMirrorEls = els;
-      if (htmlEl.getAttribute("data-colophon-view") === "split" && els.length) {
-        els[0].scrollIntoView({ block: "center", behavior: "smooth" });
-      }
-    }
-
     // ---- table of contents active section tracking ----------------------
     var tocLinks = root.querySelectorAll(".toc-list a");
     var sectionHeadings = Array.prototype.slice.call(
@@ -404,223 +361,6 @@
         observer.observe(h);
       });
     }
-
-    // ---- voiceover player -------------------------------------------------
-    var playPauseBtn = root.querySelector("#colophon-btn-playpause");
-    var prevBtn = root.querySelector("#colophon-btn-prev");
-    var nextBtn = root.querySelector("#colophon-btn-next");
-    var iconPlay = root.querySelector("#colophon-icon-play");
-    var iconPause = root.querySelector("#colophon-icon-pause");
-    var nowEl = root.querySelector("#colophon-player-now");
-    var voiceSelect = root.querySelector("#colophon-voice-select");
-    var speedSelect = root.querySelector("#colophon-speed-select");
-
-    var synthAvailable = "speechSynthesis" in window;
-    if (!synthAvailable) {
-      nowEl.textContent = "Voiceover unavailable in this browser";
-      [playPauseBtn, prevBtn, nextBtn, voiceSelect, speedSelect].forEach(
-        function (el) {
-          el.disabled = true;
-        },
-      );
-      return;
-    }
-    var synth = window.speechSynthesis;
-
-    function getReadableBlocks() {
-      var all = Array.prototype.slice.call(
-        root.querySelectorAll('#colophon-doc-body [data-block="true"]'),
-      );
-      return all.filter(function (el) {
-        return !el.closest(".code-block") && !el.closest("#design-lens");
-      });
-    }
-    var blocks = getReadableBlocks();
-    var currentIndex = -1;
-    var isPlaying = false;
-    var voices = [];
-
-    // Novelty voices confirmed present in the wild (macOS "fun" voices) —
-    // excluded so the picker isn't cluttered with unusable options. Siri
-    // voices are never exposed to the Web Speech API on any browser, so
-    // there is no "siri" match to look for here.
-    var NOVELTY_VOICE_NAMES = [
-      "bad news",
-      "bubbles",
-      "zarvox",
-      "trinoids",
-      "bells",
-      "wobble",
-    ];
-    function isNoveltyVoice(name) {
-      var n = String(name || "").toLowerCase();
-      for (var i = 0; i < NOVELTY_VOICE_NAMES.length; i++) {
-        if (n.indexOf(NOVELTY_VOICE_NAMES[i]) !== -1) return true;
-      }
-      return false;
-    }
-
-    var voiceHintEl = root.querySelector("#colophon-voice-hint");
-    var voiceHintShown = false;
-    function showVoiceHint() {
-      if (voiceHintShown) return;
-      voiceHintShown = true;
-      if (voiceHintEl) voiceHintEl.hidden = false;
-      htmlEl.setAttribute("data-colophon-voice-hint", "true");
-    }
-
-    function populateVoices() {
-      var allVoices = synth.getVoices();
-      if (!allVoices.length) return;
-
-      var english = allVoices.filter(function (v) {
-        return /^en/i.test(v.lang) && !isNoveltyVoice(v.name);
-      });
-      // Never leave the picker empty if nothing matched the English filter.
-      voices = english.length ? english : allVoices;
-
-      var previousValue = voiceSelect.value;
-      voiceSelect.innerHTML = "";
-
-      var highQuality = [];
-      var standard = [];
-      voices.forEach(function (voice, i) {
-        var entry = { voice: voice, index: i };
-        if (/premium|enhanced/i.test(voice.name)) highQuality.push(entry);
-        else standard.push(entry);
-      });
-
-      function appendGroup(label, entries) {
-        if (!entries.length) return;
-        var group = document.createElement("optgroup");
-        group.label = label;
-        entries.forEach(function (entry) {
-          var opt = document.createElement("option");
-          opt.value = String(entry.index);
-          opt.textContent = entry.voice.name + " (" + entry.voice.lang + ")";
-          group.appendChild(opt);
-        });
-        voiceSelect.appendChild(group);
-      }
-      appendGroup("High quality", highQuality);
-      appendGroup("Standard", standard);
-
-      var preferredIndex = highQuality.length
-        ? highQuality[0].index
-        : standard.length
-          ? standard[0].index
-          : 0;
-      voiceSelect.value =
-        previousValue && voices[Number(previousValue)]
-          ? previousValue
-          : String(preferredIndex);
-
-      if (!highQuality.length) showVoiceHint();
-    }
-    populateVoices();
-    if (typeof synth.onvoiceschanged !== "undefined")
-      synth.addEventListener("voiceschanged", populateVoices);
-
-    function clearHighlight() {
-      blocks.forEach(function (b) {
-        b.classList.remove("reading-active");
-      });
-      clearSourceMirror();
-    }
-    function highlightBlock(el) {
-      clearHighlight();
-      el.classList.add("reading-active");
-      el.scrollIntoView({ block: "center", behavior: "smooth" });
-      mirrorToSource(el);
-    }
-    function setPlayingUI(playing) {
-      isPlaying = playing;
-      playPauseBtn.setAttribute("aria-pressed", playing ? "true" : "false");
-      playPauseBtn.title = playing ? "Pause" : "Play";
-      iconPlay.style.display = playing ? "none" : "";
-      iconPause.style.display = playing ? "" : "none";
-    }
-    function statusFor(el) {
-      var tag = el.tagName.toLowerCase();
-      if (/^h[1-4]$/.test(tag)) return "Reading heading";
-      if (tag === "li") return "Reading list item";
-      if (tag === "td" || tag === "th") return "Reading table cell";
-      return "Reading paragraph";
-    }
-    function speakBlock(index) {
-      if (index < 0 || index >= blocks.length) {
-        stopReading();
-        nowEl.textContent = "Finished reading";
-        return;
-      }
-      currentIndex = index;
-      var el = blocks[index];
-      var text = el.textContent.trim();
-      if (!text) {
-        speakBlock(index + 1);
-        return;
-      }
-      highlightBlock(el);
-      nowEl.textContent =
-        statusFor(el) +
-        " — " +
-        text.slice(0, 60) +
-        (text.length > 60 ? "…" : "");
-      var utterance = new SpeechSynthesisUtterance(text);
-      var selectedVoice = voices[Number(voiceSelect.value)];
-      if (selectedVoice) utterance.voice = selectedVoice;
-      utterance.rate = Number(speedSelect.value) || 1;
-      utterance.onend = function () {
-        if (currentIndex === index && isPlaying) speakBlock(index + 1);
-      };
-      utterance.onerror = function () {
-        if (currentIndex === index && isPlaying) speakBlock(index + 1);
-      };
-      synth.cancel();
-      synth.speak(utterance);
-    }
-    function startReading(fromIndex) {
-      setPlayingUI(true);
-      speakBlock(fromIndex);
-    }
-    function stopReading() {
-      setPlayingUI(false);
-      synth.cancel();
-      clearHighlight();
-    }
-
-    playPauseBtn.addEventListener("click", function () {
-      if (isPlaying) stopReading();
-      else startReading(currentIndex < 0 ? 0 : currentIndex);
-    });
-    prevBtn.addEventListener("click", function () {
-      var target = Math.max(0, (currentIndex < 0 ? 0 : currentIndex) - 1);
-      if (isPlaying) startReading(target);
-      else {
-        currentIndex = target;
-        highlightBlock(blocks[target]);
-      }
-    });
-    nextBtn.addEventListener("click", function () {
-      var target = Math.min(
-        blocks.length - 1,
-        (currentIndex < 0 ? -1 : currentIndex) + 1,
-      );
-      if (isPlaying) startReading(target);
-      else {
-        currentIndex = target;
-        highlightBlock(blocks[target]);
-      }
-    });
-    speedSelect.addEventListener("change", function () {
-      if (isPlaying) startReading(currentIndex);
-    });
-    voiceSelect.addEventListener("change", function () {
-      if (isPlaying) startReading(currentIndex);
-    });
-
-    // expose for the lens-injection step below to cancel/reset if needed
-    root.__colophonStop = stopReading;
   }
 
   // ---------------------------------------------------------------------
@@ -658,9 +398,6 @@
       originalContainer.style.display = "";
       root.style.display = "none";
       document.title = originalTitle;
-      try {
-        speechSynthesis.cancel();
-      } catch (e) {}
     }
 
     window.__colophonToggle = function () {
@@ -668,11 +405,6 @@
       originalContainer.style.display = active ? "none" : "";
       root.style.display = active ? "" : "none";
       document.title = active ? readerTitle + " — Colophon" : originalTitle;
-      if (!active) {
-        try {
-          speechSynthesis.cancel();
-        } catch (e) {}
-      }
     };
 
     wireReaderBehavior(root, parsed, rawText, restore);

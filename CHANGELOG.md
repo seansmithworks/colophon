@@ -4,6 +4,17 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] - 2026-07-30
+
+### Removed
+
+- Voiceover: cut the player bar, its transport controls, the voice and
+  speed pickers, and all `speechSynthesis` logic (block-by-block reading,
+  reading-highlight, and the source-pane mirror it drove in Split view).
+  Colophon is a markdown reader and design system visualizer; audio
+  playback diluted that focus. The document now runs to the bottom of the
+  viewport with no fixed footer reserving space for it.
+
 ## [0.2.0] - 2026-07-30
 
 ### Changed

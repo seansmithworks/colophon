@@ -34,7 +34,6 @@
     monospace;
 
   --topbar-h: 44px;
-  --player-h: 76px;
   /* Fixed px (not ch) so the masthead, doc body, and lens share the exact
      same left/right edge regardless of which font-family is in effect on
      each of them. */
@@ -45,7 +44,6 @@
   position: relative;
   margin: 0;
   padding-top: calc(var(--topbar-h) + 2px);
-  padding-bottom: var(--player-h);
   min-height: 100vh;
   background: var(--bg);
   color: var(--fg);
@@ -217,7 +215,7 @@ body:has(> #colophon-root) {
 html[data-colophon-view="split"] #colophon-root .layout {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-areas: "source main";
-  height: calc(100vh - var(--topbar-h) - 2px - var(--player-h));
+  height: calc(100vh - var(--topbar-h) - 2px);
   align-items: stretch;
 }
 html[data-colophon-view="split"] #colophon-root .toc {
@@ -489,138 +487,6 @@ html[data-colophon-view="split"] #colophon-root .doc {
   letter-spacing: 0.06em;
   color: var(--fg-faint);
   margin-bottom: 10px;
-}
-
-#colophon-root .reading-active {
-  background: var(--read-tint);
-  border-radius: 3px;
-  box-shadow: 0 0 0 6px var(--read-tint);
-  transition: background 0.15s ease;
-}
-
-/* ---------- player ---------- */
-#colophon-root .player {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: var(--player-h);
-  background: var(--bg);
-  border-top: 1px solid var(--border);
-  z-index: 2147482999;
-}
-#colophon-root .player-inner {
-  height: 100%;
-  max-width: 1320px;
-  margin: 0 auto;
-  padding: 0 20px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 20px;
-}
-
-#colophon-root .player-transport {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-#colophon-root .player-btn {
-  appearance: none;
-  border: 1px solid var(--border-strong);
-  background: var(--bg);
-  color: var(--fg);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-#colophon-root .player-btn:hover {
-  border-color: var(--fg);
-}
-#colophon-root .player-btn-primary {
-  width: 36px;
-  height: 36px;
-  background: var(--fg);
-  color: var(--bg);
-  border-color: var(--fg);
-}
-#colophon-root .player-btn[disabled] {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-#colophon-root .player-status {
-  min-width: 0;
-}
-#colophon-root .player-now {
-  margin: 0;
-  font-size: 12.5px;
-  color: var(--fg-muted);
-  font-family: var(--font-sans);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-#colophon-root .player-settings {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-#colophon-root .player-field {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-#colophon-root .player-field-label {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--fg-faint);
-}
-#colophon-root .player-select {
-  font: inherit;
-  font-family: var(--font-sans);
-  font-size: 12px;
-  color: var(--fg);
-  background: var(--bg);
-  border: 1px solid var(--border-strong);
-  border-radius: 3px;
-  padding: 4px 6px;
-  max-width: 160px;
-}
-#colophon-root .player-voice-hint {
-  display: block;
-  font-family: var(--font-sans);
-  font-size: 9.5px;
-  color: var(--fg-faint);
-  cursor: help;
-  text-decoration: underline dotted;
-  text-decoration-color: var(--border-strong);
-}
-#colophon-root .player-voice-hint[hidden] {
-  display: none;
-}
-/* Grows the footer slightly to fit the one-time voice hint without
-   overlapping the player controls. */
-html[data-colophon-voice-hint="true"] #colophon-root {
-  --player-h: 92px;
-}
-
-@media (max-width: 700px) {
-  #colophon-root .player-field:first-of-type {
-    display: none;
-  }
-  #colophon-root .player-now {
-    display: none;
-  }
-  #colophon-root .player-inner {
-    grid-template-columns: auto 1fr auto;
-  }
 }
 
 /* ---------- design lens ---------- */
@@ -895,9 +761,4 @@ html[data-colophon-voice-hint="true"] #colophon-root {
 }
 #colophon-root [data-lines].sync-hover {
   border-radius: 3px;
-}
-
-#colophon-root .src-line.tts-mirror {
-  background: var(--read-tint);
-  border-left-color: var(--fg);
 }

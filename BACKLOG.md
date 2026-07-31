@@ -29,9 +29,6 @@ under the relevant section as you find things. No process beyond that.
 
 - Confirm Design Lens behavior when a local `file://` document links a
   local `.css` file. Unverified as of 0.1.0.
-- Verify whether Chrome on macOS 27 actually enumerates downloaded
-  Enhanced voices in the Web Speech API — the voice guidance added in
-  0.2.0 rests on this unverified assumption.
 
 ## Distribution
 

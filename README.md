@@ -1,7 +1,7 @@
 # Colophon
 
-A Chrome extension that turns a raw markdown page into a designed reader,
-with local text-to-speech and a source/render split view.
+A Chrome extension that turns a raw markdown page into a designed reader
+and design system visualizer, with a source/render split view.
 
 ## Screenshots
 
@@ -47,12 +47,6 @@ confirmed working in [Dia](https://www.diabrowser.com/).
   extracted from that stylesheet's custom properties. It arms
   automatically whenever tokens are found and simply doesn't appear when
   none are.
-- The bottom player reads the document aloud using the browser's built-in
-  `speechSynthesis`, with a voice picker grouped into High quality
-  (Premium/Enhanced) and Standard. On macOS, download an Enhanced or
-  Premium voice for noticeably better quality -- Ava, Evan, and Zoe are
-  good picks: System Settings -> Accessibility -> Spoken Content -> System
-  Voice -> Manage Voices.
 
 ## How it works
 
@@ -81,7 +75,7 @@ extension/
     detect.js            lightweight detector for markdown pages, stashes raw source
     md-parser.js          markdown -> HTML, tracks source line ranges per block
     lens.js               Design Lens: fetches linked stylesheets, extracts tokens
-    reader.js              builds the reader DOM, wires toggles/TOC/player
+    reader.js              builds the reader DOM, wires toggles/TOC/sync
   styles/reader.css     all reader chrome, scoped under #colophon-root
   icons/                toolbar/store icons (16/32/48/128)
 demo/                   original concept demo and its build pipeline

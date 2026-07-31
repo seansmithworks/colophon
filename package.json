@@ -1,8 +1,8 @@
 {
   "name": "colophon",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
-  "description": "Chrome MV3 extension that turns raw markdown pages into a designed reader with local text-to-speech, source/render split view, and a Design Lens for any stylesheet the document links.",
+  "description": "Chrome MV3 extension that turns raw markdown pages into a designed reader with a source/render split view and a Design Lens for any stylesheet the document links.",
   "author": "Sean Smith <sean@seansmithdesign.com>",
   "license": "MIT",
   "repository": {
