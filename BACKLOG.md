@@ -1,0 +1,37 @@
+# Backlog
+
+Open items for MD Reader, seeded from release prep. Append one line per item
+under the relevant section as you find things. No process beyond that.
+
+## Design
+
+- Final icon design is Sean's call. The current `extension/icons/*.png` set
+  is a functional placeholder derived from the existing brand mark
+  (`content/reader.js:131`), not a finished identity.
+- README tagline/pitch copy needs Sean's voice pass before the repo goes
+  public (drafted plainly/factually for now, deliberately not marketing
+  copy).
+- Masthead title provenance rule: currently prettifies frontmatter `name`.
+  Proposed rule: frontmatter title -> H1 -> prettified name. Needs a
+  decision and an implementation pass.
+- Decide Design Lens placement: in-flow block vs. right rail vs. a third
+  view tab, and whether the on/off toggle survives whichever of those is
+  chosen.
+
+## Security / submission readiness
+
+- Narrow `host_permissions` from `["<all_urls>"]` to
+  `optional_host_permissions` + per-origin `chrome.permissions.request()`
+  before any Chrome Web Store submission. TODO already left at
+  `background.js:13`.
+
+## Verification
+
+- Confirm Design Lens behavior when a local `file://` document links a
+  local `.css` file. Unverified as of 0.1.0.
+
+## Distribution
+
+- Firefox/AMO port as a possible free second channel (MV3 support in
+  Firefox is not identical to Chrome's; needs a compatibility pass before
+  committing to this).
