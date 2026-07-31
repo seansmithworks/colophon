@@ -1,0 +1,2346 @@
+<!doctype html>
+<html lang="en" data-variant="editorial" data-view="read">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MD Reader — Vercel brand guidelines</title>
+<style>
+/* ---------- tokens ---------- */
+:root {
+  --bg: #ffffff;
+  --bg-raised: #ffffff;
+  --fg: #16161a;
+  --fg-muted: #6b6b70;
+  --fg-faint: #9a9a9f;
+  --border: #e4e4e7;
+  --border-strong: #cfcfd3;
+  --accent: #16161a;
+  --code-bg: #f4f4f5;
+  --read-tint: #f0efe6;
+  --focus: #0b6bcb;
+
+  --font-serif:
+    Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia,
+    "Times New Roman", serif;
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono:
+    ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+    monospace;
+
+  --topbar-h: 44px;
+  --player-h: 76px;
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0b0d;
+    --bg-raised: #131316;
+    --fg: #ededf0;
+    --fg-muted: #a2a2a8;
+    --fg-faint: #6e6e75;
+    --border: #262629;
+    --border-strong: #37373b;
+    --accent: #ededf0;
+    --code-bg: #17171a;
+    --read-tint: #232016;
+    --focus: #6ab4ff;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body {
+  font-family: var(--font-sans);
+  padding-top: calc(var(--topbar-h) + 2px);
+  padding-bottom: var(--player-h);
+}
+
+::selection {
+  background: #b6d5f5;
+  color: #111;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---------- progress ---------- */
+.progress-track {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: transparent;
+  z-index: 60;
+}
+.progress-fill {
+  height: 100%;
+  width: 100%;
+  background: var(--fg);
+  transform: scaleX(0);
+  transform-origin: left;
+  will-change: transform;
+}
+
+/* ---------- topbar ---------- */
+.topbar {
+  position: fixed;
+  top: 2px;
+  left: 0;
+  width: 100%;
+  height: var(--topbar-h);
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  z-index: 50;
+}
+.topbar-inner {
+  height: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--fg-muted);
+}
+.brand-mark {
+  color: var(--fg);
+  flex: none;
+}
+.brand-name {
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+  color: var(--fg-muted);
+}
+
+.topbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.view-toggle {
+  display: inline-flex;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.view-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--fg-muted);
+  font: inherit;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.view-btn + .view-btn {
+  border-left: 1px solid var(--border-strong);
+}
+.view-btn[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--bg);
+}
+/* Split is a >1000px feature; below that the switcher hides entirely and
+   data-view is forced back to "read" by app.js. */
+@media (max-width: 1000px) {
+  .view-toggle {
+    display: none;
+  }
+}
+
+.lens-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  background: transparent;
+  color: var(--fg-muted);
+  font: inherit;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.lens-toggle[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+
+.variant-toggle {
+  display: inline-flex;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.variant-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--fg-muted);
+  font: inherit;
+  font-size: 12px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+}
+.variant-btn + .variant-btn {
+  border-left: 1px solid var(--border-strong);
+}
+.variant-btn[aria-pressed="true"] {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+/* ---------- layout ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-areas: "toc main";
+  gap: 0;
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.source-pane {
+  display: none;
+}
+
+.toc {
+  display: none;
+  grid-area: toc;
+}
+.doc {
+  grid-area: main;
+}
+
+/* ---------- split view (>1000px only; see .view-toggle media query) ---------- */
+html[data-view="split"] .layout {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-areas: "source main";
+  height: calc(100vh - var(--topbar-h) - 2px - var(--player-h));
+  align-items: stretch;
+}
+html[data-view="split"] .toc {
+  display: none;
+}
+html[data-view="split"] #design-lens {
+  display: none;
+}
+html[data-view="split"] .source-pane {
+  display: block;
+  grid-area: source;
+  height: 100%;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background: var(--code-bg);
+}
+html[data-view="split"] .doc {
+  height: 100%;
+  overflow-y: auto;
+}
+
+@media (min-width: 1101px) {
+  .toc {
+    display: block;
+  }
+  .toc-inner {
+    position: sticky;
+    top: calc(var(--topbar-h) + 40px);
+    padding: 40px 24px 40px 20px;
+  }
+  .toc-label {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--fg-faint);
+    margin: 0 0 12px;
+  }
+  .toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--border);
+  }
+  .toc-list li {
+    margin: 0;
+  }
+  .toc-list a {
+    display: block;
+    padding: 5px 0 5px 14px;
+    margin-left: -1px;
+    border-left: 1px solid transparent;
+    font-family: var(--font-sans);
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--fg-muted);
+    text-decoration: none;
+  }
+  .toc-list a:hover {
+    color: var(--fg);
+  }
+  .toc-list a.active {
+    color: var(--fg);
+    border-left-color: var(--fg);
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.doc {
+  min-width: 0;
+  padding: 56px 24px 96px;
+}
+
+/* ---------- masthead ---------- */
+.masthead {
+  max-width: 640px;
+  margin: 0 auto 56px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border);
+}
+.masthead-source {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--fg-faint);
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  margin: 0 0 16px;
+}
+.masthead-dot {
+  margin: 0 6px;
+  color: var(--fg-faint);
+}
+.masthead-title {
+  font-family: var(--font-sans);
+  font-size: 34px;
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0 0 16px;
+  color: var(--fg);
+}
+.masthead-abstract {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--fg-muted);
+  margin: 0 0 20px;
+}
+.masthead-meta {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--fg-faint);
+  margin: 0;
+}
+.masthead-meta code {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  background: var(--code-bg);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+/* ---------- document body: shared ---------- */
+.doc-body {
+  max-width: 640px;
+  margin: 0 auto;
+}
+.doc-body h1 {
+  display: none;
+} /* h1 already rendered as masthead title */
+
+.doc-body h2 {
+  margin: 2.6em 0 0.7em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.doc-body h3 {
+  margin: 2em 0 0.6em;
+  font-weight: 600;
+}
+.doc-body h4 {
+  margin: 1.7em 0 0.5em;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+.doc-body h2:first-child,
+.doc-body h3:first-child {
+  margin-top: 0;
+}
+
+.doc-body p {
+  margin: 0 0 1.1em;
+}
+.doc-body ul,
+.doc-body ol {
+  margin: 0 0 1.1em;
+  padding-left: 1.35em;
+}
+.doc-body li {
+  margin: 0 0 0.45em;
+}
+.doc-body li:last-child {
+  margin-bottom: 0;
+}
+
+.doc-body code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--code-bg);
+  padding: 0.12em 0.4em;
+  border-radius: 3px;
+}
+
+.doc-body a {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 2px;
+}
+.doc-body a:hover {
+  text-decoration-color: currentColor;
+}
+
+.doc-body hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 3em 0;
+}
+
+.doc-body pre.code-block {
+  margin: 0 0 1.3em;
+  padding: 14px 16px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 12.5px;
+  line-height: 1.55;
+  position: relative;
+}
+.doc-body pre.code-block code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: var(--fg);
+}
+.doc-body pre.code-block::before {
+  content: attr(data-lang);
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-faint);
+  margin-bottom: 10px;
+}
+
+/* reading highlight applied by the voiceover player */
+.reading-active {
+  background: var(--read-tint);
+  border-radius: 3px;
+  box-shadow: 0 0 0 6px var(--read-tint);
+  transition: background 0.15s ease;
+}
+
+/* ---------- editorial variant ---------- */
+html[data-variant="editorial"] .doc-body {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  line-height: 1.65;
+  max-width: 66ch;
+}
+html[data-variant="editorial"] .masthead {
+  max-width: 66ch;
+}
+html[data-variant="editorial"] .doc-body h2 {
+  font-family: var(--font-sans);
+  font-size: 24px;
+}
+html[data-variant="editorial"] .doc-body h3 {
+  font-family: var(--font-sans);
+  font-size: 19px;
+}
+html[data-variant="editorial"] .doc-body h4 {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  text-transform: none;
+}
+
+/* ---------- system variant ---------- */
+html[data-variant="system"] .doc-body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 62ch;
+}
+html[data-variant="system"] .masthead {
+  max-width: 62ch;
+}
+html[data-variant="system"] .masthead-title {
+  font-size: 30px;
+}
+html[data-variant="system"] .masthead-abstract {
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+}
+html[data-variant="system"] .doc-body h2 {
+  font-size: 21px;
+  padding-bottom: 0.4em;
+  border-bottom: 1px solid var(--border);
+}
+html[data-variant="system"] .doc-body h3 {
+  font-size: 17px;
+}
+html[data-variant="system"] .doc-body h4 {
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+html[data-variant="system"] .doc-body p,
+html[data-variant="system"] .doc-body li {
+  font-size: 15.5px;
+}
+
+/* ---------- player ---------- */
+.player {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: var(--player-h);
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  z-index: 50;
+}
+.player-inner {
+  height: 100%;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 20px;
+}
+
+.player-transport {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.player-btn {
+  appearance: none;
+  border: 1px solid var(--border-strong);
+  background: var(--bg);
+  color: var(--fg);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.player-btn:hover {
+  border-color: var(--fg);
+}
+.player-btn-primary {
+  width: 36px;
+  height: 36px;
+  background: var(--fg);
+  color: var(--bg);
+  border-color: var(--fg);
+}
+.player-btn[disabled] {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.player-status {
+  min-width: 0;
+}
+.player-now {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--fg-muted);
+  font-family: var(--font-sans);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-settings {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.player-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.player-field-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--fg-faint);
+}
+.player-select {
+  font: inherit;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  padding: 4px 6px;
+  max-width: 160px;
+}
+
+@media (max-width: 700px) {
+  .player-field:first-of-type {
+    display: none;
+  }
+  .player-now {
+    display: none;
+  }
+  .player-inner {
+    grid-template-columns: auto 1fr auto;
+  }
+}
+
+/* ---------- design lens ---------- */
+/* Lens is off by default only when the reader explicitly turns it off; the
+   toggle sets data-lens="off" on <html>. This single selector governs the
+   whole block plus every inline chip baked into the document body. */
+html[data-lens="off"] #design-lens,
+html[data-lens="off"] .lens-chip {
+  display: none;
+}
+
+.lens {
+  max-width: 760px;
+  margin: 0 auto 56px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg-raised);
+}
+
+.lens-summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-sans);
+}
+.lens-summary::-webkit-details-marker {
+  display: none;
+}
+.lens-summary::before {
+  content: "\2013"; /* en dash, rotates to a caret-ish state via [open] */
+  display: inline-block;
+  width: 12px;
+  margin-right: 8px;
+  color: var(--fg-faint);
+}
+.lens[open] > .lens-summary::before {
+  content: "\2212";
+}
+.lens:not([open]) > .lens-summary::before {
+  content: "+";
+}
+
+.lens-summary-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg);
+  flex: none;
+}
+.lens-summary-meta {
+  font-size: 11.5px;
+  color: var(--fg-faint);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lens-body {
+  padding: 4px 18px 24px;
+  border-top: 1px solid var(--border);
+}
+
+.lens-disclosure {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-style: italic;
+  color: var(--fg-faint);
+  margin: 14px 0 28px;
+}
+
+.lens-section {
+  margin: 0 0 32px;
+}
+.lens-section:last-child {
+  margin-bottom: 0;
+}
+
+.lens-heading {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: var(--fg-muted);
+  margin: 0 0 6px;
+}
+
+.lens-caption {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--fg-faint);
+  margin: 0 0 14px;
+}
+.lens-caption code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  background: var(--code-bg);
+  padding: 0 4px;
+  border-radius: 3px;
+}
+
+.lens-dot {
+  margin: 0 5px;
+  color: var(--fg-faint);
+}
+
+/* palette */
+.lens-palette {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.lens-group-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--fg-faint);
+  margin: 0 0 8px;
+}
+.lens-swatch-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.lens-swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 62px;
+}
+.lens-swatch-box {
+  display: block;
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  /* both light and dark values render at once, independent of page theme */
+  background: linear-gradient(
+    to bottom,
+    var(--sw-light) 50%,
+    var(--sw-dark) 50%
+  );
+}
+.lens-swatch-name {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--fg-faint);
+  text-align: center;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+/* type roles */
+.lens-type-list {
+  display: flex;
+  flex-direction: column;
+}
+.lens-type-row {
+  display: grid;
+  grid-template-columns: 84px 1fr auto;
+  align-items: baseline;
+  gap: 16px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+.lens-type-row:first-child {
+  border-top: none;
+}
+.lens-type-role {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--fg-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.lens-type-specimen {
+  font-family: var(--font-sans);
+  color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lens-type-meta {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--fg-faint);
+  white-space: nowrap;
+}
+
+/* spacing */
+.lens-space-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.lens-space-row {
+  display: grid;
+  grid-template-columns: 76px 1fr 48px;
+  align-items: center;
+  gap: 12px;
+}
+.lens-space-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--fg-faint);
+}
+.lens-space-bar {
+  height: 8px;
+  background: var(--fg);
+  opacity: 0.85;
+  border-radius: 1px;
+  max-width: 100%;
+}
+.lens-space-value {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--fg-faint);
+  text-align: right;
+}
+
+/* shape */
+.lens-shape-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+}
+.lens-shape-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.lens-shape-square {
+  width: 44px;
+  height: 44px;
+  background: var(--code-bg);
+  border: 1px solid var(--border-strong);
+}
+.lens-shape-rect {
+  width: 72px;
+  background: var(--code-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+}
+.lens-shape-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--fg-faint);
+}
+
+/* grid diagram */
+.lens-grid-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.lens-grid-item {
+  flex: 1;
+  min-width: 140px;
+}
+.lens-grid-label {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--fg-faint);
+  margin: 0 0 6px;
+}
+.lens-grid-cols {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), 1fr);
+  gap: 3px;
+  height: 20px;
+}
+.lens-grid-cols span {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+}
+
+/* assets */
+.lens-asset-row {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.lens-asset-mount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 20px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--code-bg);
+  color: var(--fg);
+}
+.lens-asset-svg {
+  display: block;
+  height: 20px;
+  width: auto;
+}
+.lens-asset-logo {
+  height: 18px;
+}
+
+/* inline chips inside the document body */
+.lens-chip {
+  display: inline-block;
+  width: 11px;
+  height: 11px;
+  margin-left: 3px;
+  border-radius: 2px;
+  border: 1px solid var(--border-strong);
+  vertical-align: -1px;
+  background: linear-gradient(
+    to bottom,
+    var(--sw-light) 50%,
+    var(--sw-dark) 50%
+  );
+}
+.lens-asset-chip {
+  width: auto;
+  height: auto;
+  border: none;
+  background: none;
+  vertical-align: middle;
+  padding: 1px 4px;
+}
+.lens-asset-chip-svg {
+  display: inline-block;
+  height: 11px;
+  width: auto;
+  color: var(--fg-muted);
+  vertical-align: middle;
+}
+
+/* ---------- source pane (split view) ---------- */
+.source-pane-inner {
+  margin: 0;
+  padding: 0 0 40px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 20px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.src-line {
+  display: flex;
+  padding: 0 16px;
+  border-left: 2px solid transparent;
+}
+.src-line-no {
+  flex: none;
+  width: 34px;
+  color: var(--fg-faint);
+  user-select: none;
+  text-align: right;
+  margin-right: 14px;
+}
+.src-line-text {
+  flex: 1;
+  min-width: 0;
+  color: var(--fg-muted);
+}
+
+/* correspondence highlight, both panes; DevTools-style quiet full-line tint */
+.src-line.sync-hover,
+[data-lines].sync-hover {
+  background: var(--read-tint);
+}
+.src-line.sync-hover {
+  border-left-color: var(--fg-faint);
+}
+[data-lines].sync-hover {
+  border-radius: 3px;
+}
+
+/* voiceover mirrors the active render block onto its source lines */
+.src-line.tts-mirror {
+  background: var(--read-tint);
+  border-left-color: var(--fg);
+}
+
+</style>
+</head>
+<body>
+
+<div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-brand">
+      <svg class="brand-mark" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M2 12.5L8 2.5L14 12.5H2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+      </svg>
+      <span class="brand-name">MD Reader</span>
+    </div>
+    <div class="topbar-controls">
+      <div class="view-toggle" id="view-toggle" role="group" aria-label="View">
+        <button type="button" id="view-read" class="view-btn" data-view-btn="read" aria-pressed="true">Read</button>
+        <button type="button" id="view-split" class="view-btn" data-view-btn="split" aria-pressed="false">Split</button>
+      </div>
+      <button type="button" id="lens-toggle" class="lens-toggle" aria-pressed="true" title="Toggle the Design Lens">
+        <span>Lens</span>
+      </button>
+      <div class="variant-toggle" role="group" aria-label="Reading theme">
+        <button type="button" id="variant-editorial" class="variant-btn" data-variant-btn="editorial" aria-pressed="true">Editorial</button>
+        <button type="button" id="variant-system" class="variant-btn" data-variant-btn="system" aria-pressed="false">System</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="layout" id="layout">
+  <aside class="source-pane" id="source-pane" aria-label="Raw markdown source">
+    <pre class="source-pane-inner" id="source-pane-inner" aria-label="Raw markdown source"><div class="src-line" data-line="1"><span class="src-line-no">1</span><span class="src-line-text">---</span></div><div class="src-line" data-line="2"><span class="src-line-no">2</span><span class="src-line-text">name: vercel-brand-guidelines</span></div><div class="src-line" data-line="3"><span class="src-line-no">3</span><span class="src-line-text">description: "Design, build, or substantially improve an official Vercel-authored report website. Use for customer reports, proposals, briefs, benchmarks, comparisons, narrative data pages, pricing or ROI or performance calculators, and bespoke decision pages that need Vercel information architecture, Geist typography, data storytelling, responsive craft, and light and dark themes."</span></div><div class="src-line" data-line="4"><span class="src-line-no">4</span><span class="src-line-text">---</span></div><div class="src-line" data-line="5"><span class="src-line-no">5</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="6"><span class="src-line-no">6</span><span class="src-line-text"># Design report websites like Vercel</span></div><div class="src-line" data-line="7"><span class="src-line-no">7</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="8"><span class="src-line-no">8</span><span class="src-line-text">Act as an excellent Vercel designer, editor, information architect, data storyteller, and design engineer. Turn the available material into an official Vercel-authored website. Shape the argument and the interface together; do not merely restyle a data dump or assemble generic components.</span></div><div class="src-line" data-line="9"><span class="src-line-no">9</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="10"><span class="src-line-no">10</span><span class="src-line-text">## Vercel product and brand context</span></div><div class="src-line" data-line="11"><span class="src-line-no">11</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="12"><span class="src-line-no">12</span><span class="src-line-text">Treat these as official Vercel-authored customer surfaces. Help executives, engineering leaders, security teams, procurement, finance, and other customer stakeholders understand evidence, compare alternatives, test assumptions, and make decisions.</span></div><div class="src-line" data-line="13"><span class="src-line-no">13</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="14"><span class="src-line-no">14</span><span class="src-line-text">Make the artifact precise, calm, direct, technically literate, evidence-led, editorial, and restrained. Build confidence through clarity, proof, and command of the material. Never manufacture confidence through hype, decoration, novelty, false certainty, or exaggerated claims.</span></div><div class="src-line" data-line="15"><span class="src-line-no">15</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="16"><span class="src-line-no">16</span><span class="src-line-text">Start with the reader's job, not the document category. Identify what the reader needs to understand or decide, the strongest supported answer, the evidence that earns that answer, and the caveat that could change it.</span></div><div class="src-line" data-line="17"><span class="src-line-no">17</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="18"><span class="src-line-no">18</span><span class="src-line-text">Treat this as a brand surface even when it contains product-like interactions such as calculators. Communicate official Vercel authorship without resembling Vercel product UI, a generic SaaS landing page, or a marketing campaign.</span></div><div class="src-line" data-line="19"><span class="src-line-no">19</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="20"><span class="src-line-no">20</span><span class="src-line-text">## Use this priority order</span></div><div class="src-line" data-line="21"><span class="src-line-no">21</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="22"><span class="src-line-no">22</span><span class="src-line-text">When requirements compete, protect them in this order:</span></div><div class="src-line" data-line="23"><span class="src-line-no">23</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="24"><span class="src-line-no">24</span><span class="src-line-text">1. Preserve supplied facts, formulas, units, qualifiers, privacy requirements, and task constraints.</span></div><div class="src-line" data-line="25"><span class="src-line-no">25</span><span class="src-line-text">2. Preserve the caller's framework, routes, delivery surface, and established Vercel or Geist foundation.</span></div><div class="src-line" data-line="26"><span class="src-line-no">26</span><span class="src-line-text">3. Make the reader's question, strongest supported answer, and material evidence immediately clear.</span></div><div class="src-line" data-line="27"><span class="src-line-no">27</span><span class="src-line-text">4. Establish unmistakable Vercel authorship through the shell, Geist typography, shared grid, and restraint.</span></div><div class="src-line" data-line="28"><span class="src-line-no">28</span><span class="src-line-text">5. Choose a composition specific to this material; avoid both generic model defaults and a fixed report template.</span></div><div class="src-line" data-line="29"><span class="src-line-no">29</span><span class="src-line-text">6. Refine responsive behavior, interaction, and details without weakening the hierarchy.</span></div><div class="src-line" data-line="30"><span class="src-line-no">30</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="31"><span class="src-line-no">31</span><span class="src-line-text">Ask one grouped set of questions only when proceeding could change commercial meaning, security or legal claims, privacy, formulas, units, populations, periods, customer identity, recommendations, approvals, deadlines, owners, or calls to action. Otherwise omit the unknown, label it honestly, and proceed.</span></div><div class="src-line" data-line="32"><span class="src-line-no">32</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="33"><span class="src-line-no">33</span><span class="src-line-text">## Integrate with the caller's project</span></div><div class="src-line" data-line="34"><span class="src-line-no">34</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="35"><span class="src-line-no">35</span><span class="src-line-text">Preserve the host framework, file structure, routes, component conventions, build system, and output form. Edit the files that naturally own the experience. Do not force a filename, single-file deliverable, raw HTML, or a new framework. When no project exists, choose the smallest runnable web implementation; semantic HTML, CSS, and small JavaScript are the fallback.</span></div><div class="src-line" data-line="36"><span class="src-line-no">36</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="37"><span class="src-line-no">37</span><span class="src-line-text">Resolve [assets/vercel-brand.css](https://vercel.com/geist/vercel-brand.css) from this skill's location. If the skill was opened from a URL, resolve the asset against that original URL. Outside an existing Vercel project, link the byte-identical foundation once at the nearest shared report boundary. Use the public API documented below; do not read the stylesheet implementation into context. If the resolved URL is not served as CSS or runtime loading fails, copy the asset into the project or inline its exact bytes. Never emit a `file://` URL, unresolved path, placeholder URL, translated token system, or CSS `@import`.</span></div><div class="src-line" data-line="38"><span class="src-line-no">38</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="39"><span class="src-line-no">39</span><span class="src-line-text">Only when the host is stock v0 or a generic Next.js, Tailwind, and shadcn project: preserve its stack and `components.json`; do not configure a v0 Design System, registry, starter, preset, or parallel theme. Semantic HTML and VBG own report composition; use installed shadcn only for necessary behavior, and verify scope, theme, and states for portaled components. Reuse applied Geist variables or add `Geist` and `Geist_Mono` through `next/font/google` at module scope. Keep the report server-rendered except for stateful controls. In React, omit `&lt;body&gt;`, use `className`, and load `&lt;link rel="stylesheet" href={resolvedVbgCssUrl} precedence="vbg" /&gt;` at the nearest report boundary when React 19 supports it. Integration changes syntax, never composition or the public VBG API.</span></div><div class="src-line" data-line="40"><span class="src-line-no">40</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="41"><span class="src-line-no">41</span><span class="src-line-text">For standalone HTML that copies the foundation into `assets/`, use:</span></div><div class="src-line" data-line="42"><span class="src-line-no">42</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="43"><span class="src-line-no">43</span><span class="src-line-text">```html</span></div><div class="src-line" data-line="44"><span class="src-line-no">44</span><span class="src-line-text">&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;</span></div><div class="src-line" data-line="45"><span class="src-line-no">45</span><span class="src-line-text">&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;</span></div><div class="src-line" data-line="46"><span class="src-line-no">46</span><span class="src-line-text">&lt;link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..600&amp;family=Geist+Mono:wght@400..600&amp;display=swap" rel="stylesheet" referrerpolicy="no-referrer"&gt;</span></div><div class="src-line" data-line="47"><span class="src-line-no">47</span><span class="src-line-text">&lt;link href="assets/vercel-brand.css" rel="stylesheet"&gt;</span></div><div class="src-line" data-line="48"><span class="src-line-no">48</span><span class="src-line-text">```</span></div><div class="src-line" data-line="49"><span class="src-line-no">49</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="50"><span class="src-line-no">50</span><span class="src-line-text">In an existing Vercel product project, use its installed Geist, GeistCN, semantic tokens, controls, and theme APIs instead of adding a parallel `vbg-*` layer. Otherwise use the published CSS unchanged for typography, colors, controls, themes, and report primitives. Page-owned CSS may create page-specific topology, density, evidence geometry, and semantic compositions from public tokens when the stock primitives would distort the material. Every page-authored selector names only the page-specific custom namespace; never target a published `.vbg-*` class. A custom class sharing a foundation primitive must not change its layout, typography, surface, border, overflow, or control styling.</span></div><div class="src-line" data-line="51"><span class="src-line-no">51</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="52"><span class="src-line-no">52</span><span class="src-line-text">The default network allowlist is the foundation stylesheet, the Vercel assets below, the Google Fonts requests above, and user-supplied assets. Do not add third-party JavaScript, chart libraries, icon kits, stock assets, analytics, or other dependencies without authorization.</span></div><div class="src-line" data-line="53"><span class="src-line-no">53</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="54"><span class="src-line-no">54</span><span class="src-line-text">## Work in four passes</span></div><div class="src-line" data-line="55"><span class="src-line-no">55</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="56"><span class="src-line-no">56</span><span class="src-line-text">### Frame the reader's job</span></div><div class="src-line" data-line="57"><span class="src-line-no">57</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="58"><span class="src-line-no">58</span><span class="src-line-text">Inspect all available material before designing. Privately establish:</span></div><div class="src-line" data-line="59"><span class="src-line-no">59</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="60"><span class="src-line-no">60</span><span class="src-line-text">- Who opens this, in what context, to decide or understand what?</span></div><div class="src-line" data-line="61"><span class="src-line-no">61</span><span class="src-line-text">- What is the strongest supported answer?</span></div><div class="src-line" data-line="62"><span class="src-line-no">62</span><span class="src-line-text">- What evidence makes that answer credible?</span></div><div class="src-line" data-line="63"><span class="src-line-no">63</span><span class="src-line-text">- What tradeoff, uncertainty, or limit changes its interpretation?</span></div><div class="src-line" data-line="64"><span class="src-line-no">64</span><span class="src-line-text">- What should remain available for audit without dominating the first read?</span></div><div class="src-line" data-line="65"><span class="src-line-no">65</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="66"><span class="src-line-no">66</span><span class="src-line-text">Normalize facts, units, dates, sources, formulas, contradictions, unknowns, and privacy constraints. Distinguish observation, derivation, projection, recommendation, and causation. Never invent intent, ownership, urgency, certainty, deadlines, approvals, future behavior, or confidentiality.</span></div><div class="src-line" data-line="67"><span class="src-line-no">67</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="68"><span class="src-line-no">68</span><span class="src-line-text">Order by reader need, not source order. Support two reading speeds:</span></div><div class="src-line" data-line="69"><span class="src-line-no">69</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="70"><span class="src-line-no">70</span><span class="src-line-text">- **Executive path:** identity, title, headings, decisive values, captions, and conclusion communicate the argument quickly.</span></div><div class="src-line" data-line="71"><span class="src-line-no">71</span><span class="src-line-text">- **Audit path:** exact tables, assumptions, methodology, caveats, and sources preserve the record.</span></div><div class="src-line" data-line="72"><span class="src-line-no">72</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="73"><span class="src-line-no">73</span><span class="src-line-text">Every section must answer a new reader question. Combine duplicates. Remove ceremony. Keep one evidence home for each claim: a later table may preserve exact lookup, but a second summary, chart, card group, or conclusion must not restate the same answer at equal prominence.</span></div><div class="src-line" data-line="74"><span class="src-line-no">74</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="75"><span class="src-line-no">75</span><span class="src-line-text">### Choose the composition</span></div><div class="src-line" data-line="76"><span class="src-line-no">76</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="77"><span class="src-line-no">77</span><span class="src-line-text">The first viewport is the argument, not a masthead followed by setup. It may be claim-led, evidence-led, comparison-led, or tool-led. Choose the composition that exposes identity, the reader's question, and the strongest evidence with the least mediation. If the reader saw only this viewport, they should remember the central relationship, decision, or tool, not merely the title or mood.</span></div><div class="src-line" data-line="78"><span class="src-line-no">78</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="79"><span class="src-line-no">79</span><span class="src-line-text">Before designing, privately name the obvious layout the artifact category would suggest. Reject it unless the material earns it. A renewal proposal need not resemble every renewal proposal; a calculator need not resemble every calculator. Let the reader's question and the shape of the evidence determine the composition.</span></div><div class="src-line" data-line="80"><span class="src-line-no">80</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="81"><span class="src-line-no">81</span><span class="src-line-text">When the material admits multiple structures, privately compare two materially different composition hypotheses before coding. Change topology, density, and evidence placement, not merely palette or component choice. Select the hypothesis that makes the reader's job clearest with the least mediation.</span></div><div class="src-line" data-line="82"><span class="src-line-no">82</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="83"><span class="src-line-no">83</span><span class="src-line-text">Match the opening to the job:</span></div><div class="src-line" data-line="84"><span class="src-line-no">84</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="85"><span class="src-line-no">85</span><span class="src-line-text">- **A decisive recommendation or conclusion:** make the answer and its decisive basis co-primary.</span></div><div class="src-line" data-line="86"><span class="src-line-no">86</span><span class="src-line-text">- **A comparison:** put alternatives on the same visual basis so the difference is seen, not reconstructed from prose.</span></div><div class="src-line" data-line="87"><span class="src-line-no">87</span><span class="src-line-text">- **A trend or benchmark:** let the relationship or exception lead; keep exact records below.</span></div><div class="src-line" data-line="88"><span class="src-line-no">88</span><span class="src-line-text">- **A calculator:** let the calculator itself be focal evidence when manipulating an assumption is the reader's primary job. Do not require a separate static proof before it.</span></div><div class="src-line" data-line="89"><span class="src-line-no">89</span><span class="src-line-text">- **A brief with no supported decision:** lead with the strongest supported state, implication, limit, or unresolved question rather than inventing a call to action.</span></div><div class="src-line" data-line="90"><span class="src-line-no">90</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="91"><span class="src-line-no">91</span><span class="src-line-text">Choose geometry before components. Map the material to a visual variable:</span></div><div class="src-line" data-line="92"><span class="src-line-no">92</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="93"><span class="src-line-no">93</span><span class="src-line-text">- Magnitude or rank → position or length on a common scale.</span></div><div class="src-line" data-line="94"><span class="src-line-no">94</span><span class="src-line-text">- Change over time → horizontal order and aligned position.</span></div><div class="src-line" data-line="95"><span class="src-line-no">95</span><span class="src-line-text">- Composition → proportion.</span></div><div class="src-line" data-line="96"><span class="src-line-no">96</span><span class="src-line-text">- Threshold or range → distance from a boundary.</span></div><div class="src-line" data-line="97"><span class="src-line-no">97</span><span class="src-line-text">- Process or dependency → connection and sequence.</span></div><div class="src-line" data-line="98"><span class="src-line-no">98</span><span class="src-line-text">- Qualitative alternatives → aligned rows or deliberately contrasted columns.</span></div><div class="src-line" data-line="99"><span class="src-line-no">99</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="100"><span class="src-line-no">100</span><span class="src-line-text">Use tables for precise lookup, prose for one conclusion, and charts only for relationships that become faster to understand visually. Do not default to bars because values exist.</span></div><div class="src-line" data-line="101"><span class="src-line-no">101</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="102"><span class="src-line-no">102</span><span class="src-line-text">Compose the page as a field, not a stack of components. Establish one page-level throughline and one focal relationship in each reading moment or major section. Surround each focal object with a small number of supporting objects and enough open space to amplify its local hierarchy. Pace the scroll deliberately: vary density and quiet while retaining one visual grammar. Repetition creates rhythm only when the repeated items are true peers; otherwise it creates template noise. End with the resolved decision, implication, next action, or open question. Let sources and the footer follow quietly; do not let the page simply stop after a ledger or caveat.</span></div><div class="src-line" data-line="103"><span class="src-line-no">103</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="104"><span class="src-line-no">104</span><span class="src-line-text">Give every artifact one evidence-bearing organizing move that belongs to its material and could not be transplanted unchanged into an unrelated report. It may be a comparison geometry, a threshold, a sequence, a customer-specific diagram, a distinctive evidence rhythm, or the interaction itself. It must clarify the subject, not decorate it.</span></div><div class="src-line" data-line="105"><span class="src-line-no">105</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="106"><span class="src-line-no">106</span><span class="src-line-text">Use a squint test: at a glance, the dominant claim or evidence should be obvious and the reading path should be stable. Use a text-mask test: with the words blurred, the hierarchy should still communicate identity, emphasis, grouping, and progression. If every block has equal weight, redesign before coding.</span></div><div class="src-line" data-line="107"><span class="src-line-no">107</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="108"><span class="src-line-no">108</span><span class="src-line-text">Create presence through commitment, not additional effects. When a page feels too safe, strengthen one focal relationship through proportion, hierarchy, density, pacing, line breaks, or evidence placement. Make supporting content quieter. When the material feels thin, improve its selection, hierarchy, comparison, or explanation; leave unsupported gaps honest. Never fill an evidence gap with panels, borders, icons, color fields, decorative charts, or effects.</span></div><div class="src-line" data-line="109"><span class="src-line-no">109</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="110"><span class="src-line-no">110</span><span class="src-line-text">### Authoritative Vercel visual system</span></div><div class="src-line" data-line="111"><span class="src-line-no">111</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="112"><span class="src-line-no">112</span><span class="src-line-text">Treat this section as the design authority for these artifacts. Use the accompanying CSS for exact tokens, type roles, states, controls, and primitives. Use these instructions for composition, hierarchy, and when those primitives are appropriate. Do not introduce a parallel visual system.</span></div><div class="src-line" data-line="113"><span class="src-line-no">113</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="114"><span class="src-line-no">114</span><span class="src-line-text">#### Authorship shell</span></div><div class="src-line" data-line="115"><span class="src-line-no">115</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="116"><span class="src-line-no">116</span><span class="src-line-text">Every completed page has the same Vercel authorship outcome. Existing Vercel projects implement the wordmark header and triangle footer with installed primitives; standalone pages use the exact shell below. Put the Vercel wordmark on the left of the header and the triangle logo on the left of the footer. These stable assets use `currentColor`:</span></div><div class="src-line" data-line="117"><span class="src-line-no">117</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="118"><span class="src-line-no">118</span><span class="src-line-text">- Wordmark: `https://py8fhxnkzwtsqdo9.public.blob.vercel-storage.com/p/vercel-wordmark.svg`</span></div><div class="src-line" data-line="119"><span class="src-line-no">119</span><span class="src-line-text">- Triangle: `https://py8fhxnkzwtsqdo9.public.blob.vercel-storage.com/p/vercel-logo.svg`</span></div><div class="src-line" data-line="120"><span class="src-line-no">120</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="121"><span class="src-line-no">121</span><span class="src-line-text">The header's right side may contain at most two sourced fields such as the customer, period, purpose, or confidentiality. Use sentence case. Do not invent metadata. Align the wordmark and metadata to the same baseline. Keep the footer quiet: triangle left, at most one sourced ownership or confidentiality line right. Separate both shell regions with spacing, not routine borders.</span></div><div class="src-line" data-line="122"><span class="src-line-no">122</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="123"><span class="src-line-no">123</span><span class="src-line-text">Keep preparation, audience, and document-state metadata in the masthead. Do not repeat it as a preamble between the masthead and the page-defining title.</span></div><div class="src-line" data-line="124"><span class="src-line-no">124</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="125"><span class="src-line-no">125</span><span class="src-line-text">When using the standalone CSS, preserve this direct-child order:</span></div><div class="src-line" data-line="126"><span class="src-line-no">126</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="127"><span class="src-line-no">127</span><span class="src-line-text">```html</span></div><div class="src-line" data-line="128"><span class="src-line-no">128</span><span class="src-line-text">&lt;body class="vbg-report"&gt;</span></div><div class="src-line" data-line="129"><span class="src-line-no">129</span><span class="src-line-text">  &lt;div class="vbg-shell"&gt;</span></div><div class="src-line" data-line="130"><span class="src-line-no">130</span><span class="src-line-text">    &lt;a class="vbg-skip-link" href="#main"&gt;Skip to content&lt;/a&gt;</span></div><div class="src-line" data-line="131"><span class="src-line-no">131</span><span class="src-line-text">    &lt;header class="vbg-header"&gt;</span></div><div class="src-line" data-line="132"><span class="src-line-no">132</span><span class="src-line-text">      &lt;div class="vbg-masthead"&gt;</span></div><div class="src-line" data-line="133"><span class="src-line-no">133</span><span class="src-line-text">        &lt;span class="vbg-identity"&gt;&lt;span class="vbg-wordmark" role="img" aria-label="Vercel"&gt;&lt;/span&gt;&lt;/span&gt;</span></div><div class="src-line" data-line="134"><span class="src-line-no">134</span><span class="src-line-text">        &lt;div class="vbg-document-meta"&gt;...&lt;/div&gt;</span></div><div class="src-line" data-line="135"><span class="src-line-no">135</span><span class="src-line-text">      &lt;/div&gt;</span></div><div class="src-line" data-line="136"><span class="src-line-no">136</span><span class="src-line-text">    &lt;/header&gt;</span></div><div class="src-line" data-line="137"><span class="src-line-no">137</span><span class="src-line-text">    &lt;main id="main"&gt;...&lt;/main&gt;</span></div><div class="src-line" data-line="138"><span class="src-line-no">138</span><span class="src-line-text">    &lt;footer class="vbg-footer"&gt;</span></div><div class="src-line" data-line="139"><span class="src-line-no">139</span><span class="src-line-text">      &lt;span class="vbg-logo" role="img" aria-label="Vercel"&gt;&lt;/span&gt;</span></div><div class="src-line" data-line="140"><span class="src-line-no">140</span><span class="src-line-text">      &lt;span&gt;...&lt;/span&gt;</span></div><div class="src-line" data-line="141"><span class="src-line-no">141</span><span class="src-line-text">    &lt;/footer&gt;</span></div><div class="src-line" data-line="142"><span class="src-line-no">142</span><span class="src-line-text">  &lt;/div&gt;</span></div><div class="src-line" data-line="143"><span class="src-line-no">143</span><span class="src-line-text">&lt;/body&gt;</span></div><div class="src-line" data-line="144"><span class="src-line-no">144</span><span class="src-line-text">```</span></div><div class="src-line" data-line="145"><span class="src-line-no">145</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="146"><span class="src-line-no">146</span><span class="src-line-text">The CSS supplies the masks and theme behavior. Do not substitute text, inline art, a decorative triangle, or a different logo treatment.</span></div><div class="src-line" data-line="147"><span class="src-line-no">147</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="148"><span class="src-line-no">148</span><span class="src-line-text">#### Grid and alignment</span></div><div class="src-line" data-line="149"><span class="src-line-no">149</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="150"><span class="src-line-no">150</span><span class="src-line-text">Use the shared outer grid for the masthead, title, sections, evidence, and footer. The foundation is 12 columns on desktop, 6 on tablet, and 4 on mobile. Reading prose normally occupies 6–7 desktop columns. Tables, charts, calculators, diagrams, and major comparisons may use all 12.</span></div><div class="src-line" data-line="151"><span class="src-line-no">151</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="152"><span class="src-line-no">152</span><span class="src-line-text">Every object must align to a shared edge, baseline, grid line, or deliberate optical center. Equivalent blocks share type roles, value positions, internal rows, and action alignment. A split heading and paragraph align on their first text baselines. Tables own the full evidence width of their section. Do not strand content in a narrow track while usable columns remain empty.</span></div><div class="src-line" data-line="153"><span class="src-line-no">153</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="154"><span class="src-line-no">154</span><span class="src-line-text">Open space must amplify the focal object. Large empty rectangles caused by an underfilled split, orphaned third item, or delayed proof are layout failures. Reflow or rebalance them. Three true peers normally occupy one three-column row; a deliberately dominant peer may earn more width, but its difference must be meaningful.</span></div><div class="src-line" data-line="155"><span class="src-line-no">155</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="156"><span class="src-line-no">156</span><span class="src-line-text">Do not force materially unequal findings into equal cells. Rank them, group them, or give the decisive finding more visual consequence so the geometry matches the argument.</span></div><div class="src-line" data-line="157"><span class="src-line-no">157</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="158"><span class="src-line-no">158</span><span class="src-line-text">#### Typography and rhythm</span></div><div class="src-line" data-line="159"><span class="src-line-no">159</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="160"><span class="src-line-no">160</span><span class="src-line-text">Use Geist Sans for prose, headings, labels, controls, tables, KPIs, dates, counts, percentages, durations, and financial figures. Use Geist Mono only for code, commands, paths, raw tokens, timestamps, and short operational identifiers such as region, plan, SKU, account, or environment IDs. Set only the identifier in Mono, not its sentence or entire table.</span></div><div class="src-line" data-line="161"><span class="src-line-no">161</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="162"><span class="src-line-no">162</span><span class="src-line-text">Use the published type roles and weight tokens. Do not create arbitrary font sizes or numeric font weights. Use `display` only for the single page-defining statement when scale is earned; `title` for the normal page title; `heading-24` for major section turns; `heading-20` and `heading-16` for nested structure; lede for one short orientation passage; body for reading; label for compact names; caption and metadata only for subordinate evidence context. Headings use the published Geist heading roles at their defined weight; body copy uses regular; emphasis is scarce. Use tabular numerals for aligned comparisons. Equivalent peers always share role, size, weight, line-height, and numeric treatment; never resize one because its string is longer or its value is larger.</span></div><div class="src-line" data-line="163"><span class="src-line-no">163</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="164"><span class="src-line-no">164</span><span class="src-line-text">Build vertical rhythm from relationships:</span></div><div class="src-line" data-line="165"><span class="src-line-no">165</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="166"><span class="src-line-no">166</span><span class="src-line-text">- Heading → its first paragraph: close.</span></div><div class="src-line" data-line="167"><span class="src-line-no">167</span><span class="src-line-text">- Paragraph → paragraph or list: one body rhythm.</span></div><div class="src-line" data-line="168"><span class="src-line-no">168</span><span class="src-line-text">- Label → value → detail: identical across peers.</span></div><div class="src-line" data-line="169"><span class="src-line-no">169</span><span class="src-line-text">- Content group → new section: clearly larger.</span></div><div class="src-line" data-line="170"><span class="src-line-no">170</span><span class="src-line-text">- Caption or source → evidence it qualifies: close enough to read together.</span></div><div class="src-line" data-line="171"><span class="src-line-no">171</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="172"><span class="src-line-no">172</span><span class="src-line-text">Do not apply one uniform gap to every child. Remove default margins where a grid or component already owns the gap. Keep body text at a comfortable reading size and line height; never use tiny gray copy to make density fit. Keep prose near 60–68 characters per line. Rewrite before shrinking.</span></div><div class="src-line" data-line="173"><span class="src-line-no">173</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="174"><span class="src-line-no">174</span><span class="src-line-text">Establish hierarchy through typography before surfaces or color. Separate paragraphs with space; never use first-line indents. Inspect important line breaks. Fix stranded words in large headings or ledes by improving the copy or measure, not by shrinking an individual element.</span></div><div class="src-line" data-line="175"><span class="src-line-no">175</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="176"><span class="src-line-no">176</span><span class="src-line-text">Write sentence-case headings that state the customer-specific claim or reader question. Avoid all-caps eyebrows, overlines, decorative section numbers, synthetic symmetry, repetitive cadence, generic praise, and internal authoring language. Prefer concrete nouns and active verbs. Avoid em dashes. A useful title says what happened, what changes, or what decision is needed; it does not name the report genre.</span></div><div class="src-line" data-line="177"><span class="src-line-no">177</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="178"><span class="src-line-no">178</span><span class="src-line-text">#### Color, surfaces, and boundaries</span></div><div class="src-line" data-line="179"><span class="src-line-no">179</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="180"><span class="src-line-no">180</span><span class="src-line-text">Design in monochrome. Use color only when it adds significant meaning to state, action, or data, and pair it with a non-color cue. Do not turn a recommendation, savings figure, cost component, or longer bar green merely because it is favorable or important. Use chart color only when it is needed to distinguish series or encode a sourced state. Light and dark themes are implicit; do not add a visible switcher.</span></div><div class="src-line" data-line="181"><span class="src-line-no">181</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="182"><span class="src-line-no">182</span><span class="src-line-text">The page is normally one continuous canvas. Earn a surface or boundary only when it communicates selection, interaction, warning, contrast, or a real grouping that spacing cannot express. Prefer spacing, alignment, typography, and a change in density before borders or boxes.</span></div><div class="src-line" data-line="183"><span class="src-line-no">183</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="184"><span class="src-line-no">184</span><span class="src-line-text">Do not wrap every section, metric, or comparison in a card. Avoid nested panels. Keep radii restrained and consistent with the foundation.</span></div><div class="src-line" data-line="185"><span class="src-line-no">185</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="186"><span class="src-line-no">186</span><span class="src-line-text">With the standalone foundation, create a strong contrast field only with `.vbg-band[data-tone="contrast"]`; it owns the correct nested text, border, control, and theme colors. Do not recreate a contrast surface in page CSS.</span></div><div class="src-line" data-line="187"><span class="src-line-no">187</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="188"><span class="src-line-no">188</span><span class="src-line-text">Diagnose quantity separately from intensity. If the page feels busy, remove, combine, or reorder content. If it feels loud, reduce competing color, scale, weight, borders, surfaces, and motion. Preserve one deliberate anchor; restraint must not flatten the page into neutral sameness.</span></div><div class="src-line" data-line="189"><span class="src-line-no">189</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="190"><span class="src-line-no">190</span><span class="src-line-text">Hard reject decorative gradients, gradient text, glows, blobs, stripes, textures, grid backgrounds, glass effects, paper simulations, colored side rails, ornamental shadows, and fake depth. A gradient is acceptable only when it is a labelled continuous data scale.</span></div><div class="src-line" data-line="191"><span class="src-line-no">191</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="192"><span class="src-line-no">192</span><span class="src-line-text">#### Data and evidence</span></div><div class="src-line" data-line="193"><span class="src-line-no">193</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="194"><span class="src-line-no">194</span><span class="src-line-text">Make the visual encoding honest. Show units, periods, populations, bases, and material comparators near the evidence they qualify. Use zero baselines for length encodings unless a clearly marked range or delta view better answers the question. Do not exaggerate small differences with cropped bars or hide them with nearly identical total bars; show the exact delta on the same basis. Never use a bar track as a divider or ornament. Every peer bar shares one documented scale and its length must encode the value; otherwise use aligned text.</span></div><div class="src-line" data-line="195"><span class="src-line-no">195</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="196"><span class="src-line-no">196</span><span class="src-line-text">Prefer direct labels to legends. Reserve a clear lane for every chart label so no mark, line, bracket, or annotation crosses its glyph box. Keep chart text legible in both themes. Use a caption to state what the reader should notice and what the chart does not establish. Provide a semantic table or concise text alternative for material chart data.</span></div><div class="src-line" data-line="197"><span class="src-line-no">197</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="198"><span class="src-line-no">198</span><span class="src-line-text">When a chart is the primary proof, give it enough width, height, and contrast to carry the first read. Visual salience must agree with the argument: the decisive series, exception, or threshold receives the strongest emphasis in both themes, while supporting evidence recedes without becoming illegible.</span></div><div class="src-line" data-line="199"><span class="src-line-no">199</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="200"><span class="src-line-no">200</span><span class="src-line-text">Tables are evidence, not decoration:</span></div><div class="src-line" data-line="201"><span class="src-line-no">201</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="202"><span class="src-line-no">202</span><span class="src-line-text">- Use a semantic `&lt;table&gt;` with caption, head, body, and optional foot.</span></div><div class="src-line" data-line="203"><span class="src-line-no">203</span><span class="src-line-text">- Span the full 12-column evidence width by default. Put the section introduction above it; do not strand a ledger beside a heading, note, or empty rail merely to fill a split grid.</span></div><div class="src-line" data-line="204"><span class="src-line-no">204</span><span class="src-line-text">- Match each column header’s alignment to its cells. Left-align text columns and their headers; right-align numerical columns and their headers, including placeholders and totals. Never center a header above right-aligned values.</span></div><div class="src-line" data-line="205"><span class="src-line-no">205</span><span class="src-line-text">- Keep peer units and precision consistent; do not add fake precision.</span></div><div class="src-line" data-line="206"><span class="src-line-no">206</span><span class="src-line-text">- Bottom-align multi-line column headers and keep row labels readable.</span></div><div class="src-line" data-line="207"><span class="src-line-no">207</span><span class="src-line-text">- Use normal density for ordinary short tables; compact density is for genuinely dense lookup.</span></div><div class="src-line" data-line="208"><span class="src-line-no">208</span><span class="src-line-text">- Highlight a recommended row only when the source supports the recommendation.</span></div><div class="src-line" data-line="209"><span class="src-line-no">209</span><span class="src-line-text">- Reorder columns around the reader's lookup task before shrinking or wrapping them.</span></div><div class="src-line" data-line="210"><span class="src-line-no">210</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="211"><span class="src-line-no">211</span><span class="src-line-text">Use a qualitative comparison for concise differences; use a comparison table when exact row-by-row scanning matters. Peer columns must have matching type roles and aligned row starts. If one peer needs a different structure, it is not a peer grid.</span></div><div class="src-line" data-line="212"><span class="src-line-no">212</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="213"><span class="src-line-no">213</span><span class="src-line-text">#### Calculators and interaction</span></div><div class="src-line" data-line="214"><span class="src-line-no">214</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="215"><span class="src-line-no">215</span><span class="src-line-text">Treat interaction as evidence, not decoration. A calculator should make one model legible and let the reader test the assumptions that materially change the result.</span></div><div class="src-line" data-line="216"><span class="src-line-no">216</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="217"><span class="src-line-no">217</span><span class="src-line-text">Define one canonical state model: variables, fixed inputs, formulas, units, full precision, ranges, increments, defaults, display precision, and dependencies. One control owns each variable. Fixed parameters are not controls. Pre-render the default result. Update dependent outputs atomically from full-precision state, then format for display.</span></div><div class="src-line" data-line="218"><span class="src-line-no">218</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="219"><span class="src-line-no">219</span><span class="src-line-text">Keep the focal result, controls, and supporting outputs in one coherent tool. The calculator may lead the page when using it is the reader's main job. Do not precede it with a ceremonial static version of the same answer or follow it with a default-scenario recap. Explain formulas, assumptions, bounds, or interpretation only when they help the reader trust or use the model.</span></div><div class="src-line" data-line="220"><span class="src-line-no">220</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="221"><span class="src-line-no">221</span><span class="src-line-text">Use native controls with visible labels, helpers only when needed, clear units, visible focus, and one concise live status. Preserve invalid entries and the last valid result rather than silently clamping or defaulting. Keep all controls and results usable by keyboard and screen reader.</span></div><div class="src-line" data-line="222"><span class="src-line-no">222</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="223"><span class="src-line-no">223</span><span class="src-line-text">With the standalone foundation, `.vbg-calculator` directly owns `.vbg-calculator-inputs` and `.vbg-calculator-output`; do not interpose a layout wrapper. A unit control uses this nesting so its label and helper stay outside the bordered field:</span></div><div class="src-line" data-line="224"><span class="src-line-no">224</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="225"><span class="src-line-no">225</span><span class="src-line-text">```html</span></div><div class="src-line" data-line="226"><span class="src-line-no">226</span><span class="src-line-text">&lt;div class="vbg-field"&gt;</span></div><div class="src-line" data-line="227"><span class="src-line-no">227</span><span class="src-line-text">  &lt;label class="vbg-label" for="rate"&gt;Flex commitment rate&lt;/label&gt;</span></div><div class="src-line" data-line="228"><span class="src-line-no">228</span><span class="src-line-text">  &lt;div class="vbg-unit-field"&gt;</span></div><div class="src-line" data-line="229"><span class="src-line-no">229</span><span class="src-line-text">    &lt;input id="rate" type="number" value="8"&gt;</span></div><div class="src-line" data-line="230"><span class="src-line-no">230</span><span class="src-line-text">    &lt;span class="vbg-unit-suffix"&gt;%&lt;/span&gt;</span></div><div class="src-line" data-line="231"><span class="src-line-no">231</span><span class="src-line-text">  &lt;/div&gt;</span></div><div class="src-line" data-line="232"><span class="src-line-no">232</span><span class="src-line-text">  &lt;p class="vbg-helper"&gt;From 4% to 12%.&lt;/p&gt;</span></div><div class="src-line" data-line="233"><span class="src-line-no">233</span><span class="src-line-text">&lt;/div&gt;</span></div><div class="src-line" data-line="234"><span class="src-line-no">234</span><span class="src-line-text">```</span></div><div class="src-line" data-line="235"><span class="src-line-no">235</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="236"><span class="src-line-no">236</span><span class="src-line-text">#### Motion and delight</span></div><div class="src-line" data-line="237"><span class="src-line-no">237</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="238"><span class="src-line-no">238</span><span class="src-line-text">Default to stillness. Never add auto-scrolling marquees, simulated typing cursors, or decorative pulsing status indicators. Add motion only when it explains a state change, preserves continuity, or confirms an action. Never gate reading behind animation, reveal every section on scroll, move imagery on hover, or add bounce, parallax, cinematic transitions, sound, or spectacle. Keep the base experience complete without motion and respect reduced-motion preferences.</span></div><div class="src-line" data-line="239"><span class="src-line-no">239</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="240"><span class="src-line-no">240</span><span class="src-line-text">For formal Vercel pages, create delight through unusually clear evidence or unusually low interaction friction: a comparison understood immediately, a calculator that makes a model obvious, or a customer-specific interaction that removes work. Do not manufacture personality with jokes, celebration, Easter eggs, decorative motion, or effects.</span></div><div class="src-line" data-line="241"><span class="src-line-no">241</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="242"><span class="src-line-no">242</span><span class="src-line-text">#### Media and icons</span></div><div class="src-line" data-line="243"><span class="src-line-no">243</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="244"><span class="src-line-no">244</span><span class="src-line-text">Use supplied screenshots, diagrams, customer media, or logos only when they are evidence or materially improve understanding. Never add stock imagery, decorative AI illustrations, abstract shapes, fake product screenshots, or mandatory hero media. Do not use icons as decoration or place them in colored tiles. Prefer text labels unless an established icon makes an action materially faster to recognize.</span></div><div class="src-line" data-line="245"><span class="src-line-no">245</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="246"><span class="src-line-no">246</span><span class="src-line-text">### Inspect and revise privately</span></div><div class="src-line" data-line="247"><span class="src-line-no">247</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="248"><span class="src-line-no">248</span><span class="src-line-text">Render the actual result when tooling exists. Inspect the first viewport, full page, and both light and dark themes. Also verify responsive reflow before handoff, but do not expose an evaluation matrix or critique report unless the user asks for one.</span></div><div class="src-line" data-line="249"><span class="src-line-no">249</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="250"><span class="src-line-no">250</span><span class="src-line-text">Review in this order:</span></div><div class="src-line" data-line="251"><span class="src-line-no">251</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="252"><span class="src-line-no">252</span><span class="src-line-text">1. **First read:** Is Vercel authorship immediate? If the reader saw only the first viewport, would they remember the central relationship, decision, or tool rather than only the title or mood?</span></div><div class="src-line" data-line="253"><span class="src-line-no">253</span><span class="src-line-text">2. **Composition:** Is there one dominant object? Does each section advance the argument? Is any empty space accidental?</span></div><div class="src-line" data-line="254"><span class="src-line-no">254</span><span class="src-line-text">3. **Typography:** Are roles consistent, peer values equal, baselines aligned, prose readable, and vertical rhythm relational rather than uniform?</span></div><div class="src-line" data-line="255"><span class="src-line-no">255</span><span class="src-line-text">4. **Evidence:** Does geometry prove the claim? Are tables full width? Are chart labels clear? Is anything repeated without a new reader task?</span></div><div class="src-line" data-line="256"><span class="src-line-no">256</span><span class="src-line-text">5. **Restraint:** Can any surface, border, pill, icon, label, color, paragraph, or section be removed without losing meaning, affordance, or rhythm? If yes, remove it.</span></div><div class="src-line" data-line="257"><span class="src-line-no">257</span><span class="src-line-text">6. **Themes and reflow:** Do light and dark have equivalent hierarchy and contrast? Does the page recompose without overflow or character-level wrapping?</span></div><div class="src-line" data-line="258"><span class="src-line-no">258</span><span class="src-line-text">7. **Trust and access:** Are semantics, focus, labels, text alternatives, sources, caveats, and interaction behavior sound?</span></div><div class="src-line" data-line="259"><span class="src-line-no">259</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="260"><span class="src-line-no">260</span><span class="src-line-text">Fix the highest-impact systemic defect, render again, and repeat until no known material visual or usability issue remains. Keep this work internal. Deliver the requested implementation, not a score, process diary, comparison log, or self-critique.</span></div><div class="src-line" data-line="261"><span class="src-line-no">261</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="262"><span class="src-line-no">262</span><span class="src-line-text">## Reject generated-design reflexes</span></div><div class="src-line" data-line="263"><span class="src-line-no">263</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="264"><span class="src-line-no">264</span><span class="src-line-text">Do not ship any of these recognizable defaults:</span></div><div class="src-line" data-line="265"><span class="src-line-no">265</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="266"><span class="src-line-no">266</span><span class="src-line-text">- All-caps or tracked eyebrows, kickers, overlines, and decorative numbered section labels.</span></div><div class="src-line" data-line="267"><span class="src-line-no">267</span><span class="src-line-text">- Em dashes.</span></div><div class="src-line" data-line="268"><span class="src-line-no">268</span><span class="src-line-text">- Decorative gradients, glows, blobs, stripes, textures, glass, or ornamental shadows.</span></div><div class="src-line" data-line="269"><span class="src-line-no">269</span><span class="src-line-text">- Generic centered hero copy followed by a card grid.</span></div><div class="src-line" data-line="270"><span class="src-line-no">270</span><span class="src-line-text">- Repeated metric boxes when one composed relationship would be clearer.</span></div><div class="src-line" data-line="271"><span class="src-line-no">271</span><span class="src-line-text">- A badge, pill, or rounded capsule for ordinary metadata, chart annotations, or editorial labels.</span></div><div class="src-line" data-line="272"><span class="src-line-no">272</span><span class="src-line-text">- Cards nested inside cards, or borders used to repair weak hierarchy.</span></div><div class="src-line" data-line="273"><span class="src-line-no">273</span><span class="src-line-text">- A dark rounded rectangle around every chart or calculator.</span></div><div class="src-line" data-line="274"><span class="src-line-no">274</span><span class="src-line-text">- Arbitrary icon tiles, oversized icons, or mixed icon styles.</span></div><div class="src-line" data-line="275"><span class="src-line-no">275</span><span class="src-line-text">- Tiny muted prose, arbitrary font sizes, inconsistent peer values, or misaligned baselines.</span></div><div class="src-line" data-line="276"><span class="src-line-no">276</span><span class="src-line-text">- A narrow table floating inside a wide section, or a wide table compressed into broken words.</span></div><div class="src-line" data-line="277"><span class="src-line-no">277</span><span class="src-line-text">- Decorative charts, redundant visualizations, legends that replace direct labels, or color without meaning.</span></div><div class="src-line" data-line="278"><span class="src-line-no">278</span><span class="src-line-text">- Repeated full-width bars that do not share a scale or encode a visible difference.</span></div><div class="src-line" data-line="279"><span class="src-line-no">279</span><span class="src-line-text">- Identical section silhouettes across unrelated reader questions.</span></div><div class="src-line" data-line="280"><span class="src-line-no">280</span><span class="src-line-text">- Repeated recommendation, summary, rationale, and conclusion sections that say the same thing.</span></div><div class="src-line" data-line="281"><span class="src-line-no">281</span><span class="src-line-text">- Authoring-process narration such as how the page was organized, why a representation was chosen, or how source fields were renamed. Keep concise interpretive captions that state an evidence-led takeaway or limitation.</span></div><div class="src-line" data-line="282"><span class="src-line-no">282</span><span class="src-line-text">- Visible theme controls, print-only UI, stock imagery, fake screenshots, or decorative brand marks.</span></div><div class="src-line" data-line="283"><span class="src-line-no">283</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="284"><span class="src-line-no">284</span><span class="src-line-text">Do not compensate for avoiding these defaults by producing a sterile anti-design template. Vercel restraint is precise hierarchy, excellent typography, clear evidence, strong alignment, and deliberate tension. It is not merely black, white, thin rules, and large empty margins.</span></div><div class="src-line" data-line="285"><span class="src-line-no">285</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="286"><span class="src-line-no">286</span><span class="src-line-text">## Use the published CSS API</span></div><div class="src-line" data-line="287"><span class="src-line-no">287</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="288"><span class="src-line-no">288</span><span class="src-line-text">Put `.vbg-report` on the page root and wrap standalone output in `.vbg-shell`. Use semantic HTML and only the primitives earned by the material.</span></div><div class="src-line" data-line="289"><span class="src-line-no">289</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="290"><span class="src-line-no">290</span><span class="src-line-text">The generator-facing shell and layout classes are:</span></div><div class="src-line" data-line="291"><span class="src-line-no">291</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="292"><span class="src-line-no">292</span><span class="src-line-text">`vbg-skip-link`, `vbg-header`, `vbg-masthead`, `vbg-identity`, `vbg-wordmark`, `vbg-document-meta`, `vbg-recipient`, `vbg-state`, `vbg-date`, `vbg-confidentiality`, `vbg-context`, `vbg-opening`, `vbg-opening-claim`, `vbg-opening-proof`, `vbg-opening-context`, `vbg-section`, `vbg-chapter`, `vbg-reading`, `vbg-flow`, `vbg-stack`, `vbg-cluster`, `vbg-grid`, `vbg-split`, `vbg-band`, `vbg-span-4`, `vbg-span-5`, `vbg-span-6`, `vbg-span-7`, `vbg-span-8`, `vbg-span-12`, `vbg-footer`, `vbg-logo`.</span></div><div class="src-line" data-line="293"><span class="src-line-no">293</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="294"><span class="src-line-no">294</span><span class="src-line-text">The generator-facing type and evidence classes are:</span></div><div class="src-line" data-line="295"><span class="src-line-no">295</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="296"><span class="src-line-no">296</span><span class="src-line-text">`vbg-title`, `vbg-display`, `vbg-heading-24`, `vbg-heading-20`, `vbg-heading-16`, `vbg-lede`, `vbg-label`, `vbg-meta`, `vbg-caption`, `vbg-mono`, `vbg-numeric`, `vbg-visually-hidden`, `vbg-note`, `vbg-formula`, `vbg-sources`, `vbg-stat-strip`, `vbg-stat`, `vbg-stat-label`, `vbg-stat-value`, `vbg-stat-detail`, `vbg-comparison`, `vbg-table-wrap`, `vbg-chart`, `vbg-chart-header`, `vbg-chart-viewport`, `vbg-legend`, `vbg-bar-comparison`, `vbg-bar-list`, `vbg-bar`, `vbg-bar-label`, `vbg-bar-value`, `vbg-bar-track`, `vbg-bar-fill`.</span></div><div class="src-line" data-line="297"><span class="src-line-no">297</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="298"><span class="src-line-no">298</span><span class="src-line-text">The generator-facing calculator classes are:</span></div><div class="src-line" data-line="299"><span class="src-line-no">299</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="300"><span class="src-line-no">300</span><span class="src-line-text">`vbg-calculator`, `vbg-calculator-inputs`, `vbg-calculator-output`, `vbg-control-group`, `vbg-field`, `vbg-unit-field`, `vbg-unit-prefix`, `vbg-unit-suffix`, `vbg-helper`, `vbg-error`, `vbg-range-ends`, `vbg-range-min`, `vbg-range-max`, `vbg-result-group`, `vbg-result`, `vbg-result-label`, `vbg-result-value`, `vbg-result-detail`, `vbg-button`.</span></div><div class="src-line" data-line="301"><span class="src-line-no">301</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="302"><span class="src-line-no">302</span><span class="src-line-text">Use these primitives according to their semantic names. A `.vbg-stat-strip` owns peer `.vbg-stat` blocks with label, value, and optional detail. A `.vbg-table-wrap` directly owns one semantic table. A `figure.vbg-chart` owns its header, focusable viewport with inline SVG, caption, and optional legend. A `.vbg-calculator` keeps its results, inputs, and output group in one coherent subtree. Do not interpose decorative wrappers or restyle foundation controls.</span></div><div class="src-line" data-line="303"><span class="src-line-no">303</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="304"><span class="src-line-no">304</span><span class="src-line-text">Treat only the listed names and visualization names below as the public API. If none fits, use semantic HTML plus a page-owned `vbg-custom-*` or `vbg-viz-*` hook; never inspect the CSS for internal selectors, guess a `vbg-*` class, or extrapolate a name from another primitive.</span></div><div class="src-line" data-line="305"><span class="src-line-no">305</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="306"><span class="src-line-no">306</span><span class="src-line-text">Published visualization classes include `vbg-chart-axis`, `vbg-chart-gridline`, `vbg-series-stroke`, `vbg-series-fill`, `vbg-data-point`, `vbg-chart-direct-label`, `vbg-chart-value`, `vbg-chart-annotation`, `vbg-chart-annotation-line`, and `vbg-series-1` through `vbg-series-6`. Combine the fill or stroke role with a numbered series class; never synthesize names such as `vbg-series-fill-1`. Use `vbg-custom-*` only for local layout geometry and `vbg-viz-*` only for non-text visualization marks. Never apply custom visualization classes to SVG text.</span></div><div class="src-line" data-line="307"><span class="src-line-no">307</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="308"><span class="src-line-no">308</span><span class="src-line-text">Page-owned CSS may read only these public token families:</span></div><div class="src-line" data-line="309"><span class="src-line-no">309</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="310"><span class="src-line-no">310</span><span class="src-line-text">- Surfaces and text: `--vbg-surface-primary`, `--vbg-surface-secondary`, `--vbg-surface-contrast`, `--vbg-text-primary`, `--vbg-text-secondary`, `--vbg-text-on-contrast`, `--vbg-text-on-contrast-secondary`.</span></div><div class="src-line" data-line="311"><span class="src-line-no">311</span><span class="src-line-text">- Borders and state: `--vbg-border-subtle`, `--vbg-border-default`, `--vbg-border-strong`, `--vbg-border-on-contrast`, `--vbg-focus`, `--vbg-color-info`, `--vbg-color-success`, `--vbg-color-warning`, `--vbg-color-error`.</span></div><div class="src-line" data-line="312"><span class="src-line-no">312</span><span class="src-line-text">- Data: `--vbg-chart-1` through `--vbg-chart-6`.</span></div><div class="src-line" data-line="313"><span class="src-line-no">313</span><span class="src-line-text">- Rhythm and shape: `--vbg-space-1`, `--vbg-space-2`, `--vbg-space-3`, `--vbg-space-4`, `--vbg-space-5`, `--vbg-space-6`, `--vbg-space-8`, `--vbg-space-10`, `--vbg-space-12`, `--vbg-space-16`, `--vbg-radius-small`, `--vbg-radius`.</span></div><div class="src-line" data-line="314"><span class="src-line-no">314</span><span class="src-line-text">- Type size: `--vbg-type-display`, `--vbg-type-page-title`, `--vbg-type-title`, `--vbg-type-section`, `--vbg-type-subsection`, `--vbg-type-lede`, `--vbg-type-body`, `--vbg-type-compact`, `--vbg-type-label`, `--vbg-type-metadata`.</span></div><div class="src-line" data-line="315"><span class="src-line-no">315</span><span class="src-line-text">- Type weight and leading: `--vbg-weight-regular`, `--vbg-weight-heading`, `--vbg-weight-medium`, `--vbg-weight-semibold`, `--vbg-leading-body`, `--vbg-leading-compact`, `--vbg-leading-caption`, `--vbg-leading-display`, `--vbg-leading-page-title`, `--vbg-leading-title`, `--vbg-leading-section`, `--vbg-leading-subsection`, `--vbg-leading-lede`.</span></div><div class="src-line" data-line="316"><span class="src-line-no">316</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="317"><span class="src-line-no">317</span><span class="src-line-text">Use the exact names with `var()`. Never invent, alias, or redeclare a `--vbg-*` token. Prefer `currentColor`, `inherit`, or `transparent` when a custom mark needs no distinct semantic role. Every custom `font-weight` uses a published weight token.</span></div><div class="src-line" data-line="318"><span class="src-line-no">318</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="319"><span class="src-line-no">319</span><span class="src-line-text">## Accessibility and responsive behavior</span></div><div class="src-line" data-line="320"><span class="src-line-no">320</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="321"><span class="src-line-no">321</span><span class="src-line-text">Use landmarks, one descriptive `h1`, ordered headings, a skip link, native controls, semantic tables, figures and captions, accessible names, visible focus, and text alternatives. Meet WCAG AA and never rely on color alone. Treat source order as reading order.</span></div><div class="src-line" data-line="322"><span class="src-line-no">322</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="323"><span class="src-line-no">323</span><span class="src-line-text">Do not conceal page overflow. Give grid and flex children `min-width: 0`; reflow before shrinking. Preserve readable type and control sizes. Short comparisons may stack; long ledgers may scroll locally when reordering and simplification cannot preserve lookup. The page must remain usable in light and dark and across desktop and narrow screens without a visible theme switcher.</span></div><div class="src-line" data-line="324"><span class="src-line-no">324</span><span class="src-line-text">&nbsp;</span></div><div class="src-line" data-line="325"><span class="src-line-no">325</span><span class="src-line-text">The target is Vercel judgment, not Vercel decoration.</span></div></pre>
+  </aside>
+
+  <nav class="toc" id="toc" aria-label="Table of contents">
+    <div class="toc-inner">
+      <p class="toc-label">Contents</p>
+      <ol class="toc-list">
+            <li><a href="#vercel-product-and-brand-context" data-toc-link="vercel-product-and-brand-context">Vercel product and brand context</a></li>
+            <li><a href="#use-this-priority-order" data-toc-link="use-this-priority-order">Use this priority order</a></li>
+            <li><a href="#integrate-with-the-caller-s-project" data-toc-link="integrate-with-the-caller-s-project">Integrate with the caller's project</a></li>
+            <li><a href="#work-in-four-passes" data-toc-link="work-in-four-passes">Work in four passes</a></li>
+            <li><a href="#reject-generated-design-reflexes" data-toc-link="reject-generated-design-reflexes">Reject generated-design reflexes</a></li>
+            <li><a href="#use-the-published-css-api" data-toc-link="use-the-published-css-api">Use the published CSS API</a></li>
+            <li><a href="#accessibility-and-responsive-behavior" data-toc-link="accessibility-and-responsive-behavior">Accessibility and responsive behavior</a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <main class="doc" id="doc">
+    <section class="masthead" data-block="true" data-lines="1-4">
+      <p class="masthead-source">vercel.com <span class="masthead-dot">·</span> markdown source</p>
+      <h1 class="masthead-title">Vercel brand guidelines</h1>
+      <p class="masthead-abstract">Design, build, or substantially improve an official Vercel-authored report website. Use for customer reports, proposals, briefs, benchmarks, comparisons, narrative data pages, pricing or ROI or performance calculators, and bespoke decision pages that need Vercel information architecture, Geist typography, data storytelling, responsive craft, and light and dark themes.</p>
+      <p class="masthead-meta">4,796 words <span class="masthead-dot">·</span> 24 min read <span class="masthead-dot">·</span> name: <code>vercel-brand-guidelines</code></p>
+    </section>
+
+    <details class="lens" id="design-lens" open>
+      <summary class="lens-summary">
+        <span class="lens-summary-title">Design Lens</span>
+        <span class="lens-summary-meta">extracted from vercel-brand.css <span class="lens-dot">·</span> 88 tokens</span>
+      </summary>
+
+      <div class="lens-body">
+        <p class="lens-disclosure">Derived content, not part of the source document. Visualizes the design tokens the linked stylesheet defines.</p>
+
+        <section class="lens-section">
+          <h5 class="lens-heading">Palette</h5>
+          <p class="lens-caption">Each swatch shows its light value (top) and dark value (bottom) from the token's <code>light-dark()</code> pair.</p>
+          <div class="lens-palette">
+        <div class="lens-palette-group">
+          <p class="lens-group-label">Background</p>
+          <div class="lens-swatch-row">
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(1 0 0);--sw-dark:oklch(0 0 0)"></span>
+              <span class="lens-swatch-name">background-100</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.984 0 0);--sw-dark:oklch(0.027 0 0)"></span>
+              <span class="lens-swatch-name">background-200</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lens-palette-group">
+          <p class="lens-group-label">Gray</p>
+          <div class="lens-swatch-row">
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.961 0 0);--sw-dark:oklch(0.218 0 0)"></span>
+              <span class="lens-swatch-name">gray-100</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.94 0 0);--sw-dark:oklch(0.239 0 0)"></span>
+              <span class="lens-swatch-name">gray-200</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.925 0 0);--sw-dark:oklch(0.281 0 0)"></span>
+              <span class="lens-swatch-name">gray-300</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.937 0 0);--sw-dark:oklch(0.301 0 0)"></span>
+              <span class="lens-swatch-name">gray-400</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.836 0 0);--sw-dark:oklch(0.39 0 0)"></span>
+              <span class="lens-swatch-name">gray-500</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.732 0 0);--sw-dark:oklch(0.623 0 0)"></span>
+              <span class="lens-swatch-name">gray-600</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.65 0 0);--sw-dark:oklch(0.65 0 0)"></span>
+              <span class="lens-swatch-name">gray-700</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.59 0 0);--sw-dark:oklch(0.59 0 0)"></span>
+              <span class="lens-swatch-name">gray-800</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.42 0 0);--sw-dark:oklch(0.706 0 0)"></span>
+              <span class="lens-swatch-name">gray-900</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.205 0 0);--sw-dark:oklch(0.946 0 0)"></span>
+              <span class="lens-swatch-name">gray-1000</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lens-palette-group">
+          <p class="lens-group-label">Gray alpha</p>
+          <div class="lens-swatch-row">
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0 0 0 / 0.05);--sw-dark:oklch(1 0 0 / 0.07)"></span>
+              <span class="lens-swatch-name">gray-alpha-100</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0 0 0 / 0.081);--sw-dark:oklch(1 0 0 / 0.09)"></span>
+              <span class="lens-swatch-name">gray-alpha-200</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0 0 0 / 0.1);--sw-dark:oklch(1 0 0 / 0.13)"></span>
+              <span class="lens-swatch-name">gray-alpha-300</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0 0 0 / 0.08);--sw-dark:oklch(1 0 0 / 0.14)"></span>
+              <span class="lens-swatch-name">gray-alpha-400</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0 0 0 / 0.21);--sw-dark:oklch(1 0 0 / 0.24)"></span>
+              <span class="lens-swatch-name">gray-alpha-500</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0 0 0 / 0.24);--sw-dark:oklch(1 0 0 / 0.51)"></span>
+              <span class="lens-swatch-name">gray-alpha-600</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0 0 0 / 0.44);--sw-dark:oklch(1 0 0 / 0.54)"></span>
+              <span class="lens-swatch-name">gray-alpha-700</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0 0 0 / 0.51);--sw-dark:oklch(1 0 0 / 0.47)"></span>
+              <span class="lens-swatch-name">gray-alpha-800</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0 0 0 / 0.7);--sw-dark:oklch(1 0 0 / 0.61)"></span>
+              <span class="lens-swatch-name">gray-alpha-900</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0 0 0 / 0.91);--sw-dark:oklch(1 0 0 / 0.92)"></span>
+              <span class="lens-swatch-name">gray-alpha-1000</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lens-palette-group">
+          <p class="lens-group-label">Blue</p>
+          <div class="lens-swatch-row">
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(97.32% 0.0141 251.56);--sw-dark:oklch(22.17% 0.069 259.89)"></span>
+              <span class="lens-swatch-name">blue-100</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(91.58% 0.0473 245.116);--sw-dark:oklch(34.1% 0.121 254.74)"></span>
+              <span class="lens-swatch-name">blue-400</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(57.61% 0.2508 258.23);--sw-dark:oklch(57.61% 0.2321 258.23)"></span>
+              <span class="lens-swatch-name">blue-700</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(53.18% 0.2399 256.99);--sw-dark:oklch(71.7% 0.1648 250.794)"></span>
+              <span class="lens-swatch-name">blue-900</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(26.67% 0.1099 254.34);--sw-dark:oklch(96.75% 0.0179 242.423)"></span>
+              <span class="lens-swatch-name">blue-1000</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lens-palette-group">
+          <p class="lens-group-label">Amber</p>
+          <div class="lens-swatch-row">
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(97.48% 0.0331 85.79);--sw-dark:oklch(22.46% 0.0538 76.04)"></span>
+              <span class="lens-swatch-name">amber-100</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(91.02% 0.1322 88.25);--sw-dark:oklch(35.53% 0.0903 66.297)"></span>
+              <span class="lens-swatch-name">amber-400</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(81.87% 0.1969 76.46);--sw-dark:oklch(81.87% 0.1969 76.46)"></span>
+              <span class="lens-swatch-name">amber-700</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(52.79% 0.1496 54.65);--sw-dark:oklch(77.21% 0.1991 64.28)"></span>
+              <span class="lens-swatch-name">amber-900</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(30.83% 0.099 45.48);--sw-dark:oklch(96.7% 0.0418 84.59)"></span>
+              <span class="lens-swatch-name">amber-1000</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lens-palette-group">
+          <p class="lens-group-label">Red</p>
+          <div class="lens-swatch-row">
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(96.5% 0.0223 13.09);--sw-dark:oklch(22.1% 0.0657 15.11)"></span>
+              <span class="lens-swatch-name">red-100</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(91.51% 0.0471 19.8);--sw-dark:oklch(35.27% 0.1273 21.23)"></span>
+              <span class="lens-swatch-name">red-400</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(62.56% 0.2524 23.03);--sw-dark:oklch(62.56% 0.2234 23.03)"></span>
+              <span class="lens-swatch-name">red-700</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(54.99% 0.232 25.29);--sw-dark:oklch(69.96% 0.2136 22.03)"></span>
+              <span class="lens-swatch-name">red-900</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(24.8% 0.1041 18.86);--sw-dark:oklch(95.6% 0.0293 6.61)"></span>
+              <span class="lens-swatch-name">red-1000</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lens-palette-group">
+          <p class="lens-group-label">Green</p>
+          <div class="lens-swatch-row">
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(97.59% 0.0289 145.42);--sw-dark:oklch(23.09% 0.0716 149.68)"></span>
+              <span class="lens-swatch-name">green-100</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(91.49% 0.0976 146.24);--sw-dark:oklch(34.39% 0.1039 147.78)"></span>
+              <span class="lens-swatch-name">green-400</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(64.58% 0.1746 147.27);--sw-dark:oklch(64.58% 0.199 147.27)"></span>
+              <span class="lens-swatch-name">green-700</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(51.75% 0.1453 147.65);--sw-dark:oklch(73.1% 0.2158 148.29)"></span>
+              <span class="lens-swatch-name">green-900</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(29.15% 0.1197 147.38);--sw-dark:oklch(96.76% 0.056 154.18)"></span>
+              <span class="lens-swatch-name">green-1000</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lens-palette-group">
+          <p class="lens-group-label">Semantic</p>
+          <div class="lens-swatch-row">
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(57.61% 0.2508 258.23);--sw-dark:oklch(57.61% 0.2321 258.23)"></span>
+              <span class="lens-swatch-name">color-info</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(51.75% 0.1453 147.65);--sw-dark:oklch(73.1% 0.2158 148.29)"></span>
+              <span class="lens-swatch-name">color-success</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(52.79% 0.1496 54.65);--sw-dark:oklch(77.21% 0.1991 64.28)"></span>
+              <span class="lens-swatch-name">color-warning</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(62.56% 0.2524 23.03);--sw-dark:oklch(62.56% 0.2234 23.03)"></span>
+              <span class="lens-swatch-name">color-error</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lens-palette-group">
+          <p class="lens-group-label">Chart series</p>
+          <div class="lens-swatch-row">
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.205 0 0);--sw-dark:oklch(0.946 0 0)"></span>
+              <span class="lens-swatch-name">chart-1</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.42 0 0);--sw-dark:oklch(0.706 0 0)"></span>
+              <span class="lens-swatch-name">chart-2</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.59 0 0);--sw-dark:oklch(0.59 0 0)"></span>
+              <span class="lens-swatch-name">chart-3</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.205 0 0);--sw-dark:oklch(0.946 0 0)"></span>
+              <span class="lens-swatch-name">chart-4</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.42 0 0);--sw-dark:oklch(0.706 0 0)"></span>
+              <span class="lens-swatch-name">chart-5</span>
+            </div>
+            <div class="lens-swatch">
+              <span class="lens-swatch-box" style="--sw-light:oklch(0.59 0 0);--sw-dark:oklch(0.59 0 0)"></span>
+              <span class="lens-swatch-name">chart-6</span>
+            </div>
+          </div>
+        </div>
+          </div>
+        </section>
+
+        <section class="lens-section">
+          <h5 class="lens-heading">Type roles</h5>
+          <p class="lens-caption">Rendered in the system sans stack — Geist is not loadable offline.</p>
+          <div class="lens-type-list">
+        <div class="lens-type-row">
+          <span class="lens-type-role">display</span>
+          <span class="lens-type-specimen" style="font-size:3rem;font-weight:450;line-height:56px">Set the reader's question</span>
+          <span class="lens-type-meta">3rem <span class="lens-dot">·</span> 450 <span class="lens-dot">·</span> 56px</span>
+        </div>
+
+        <div class="lens-type-row">
+          <span class="lens-type-role">page-title</span>
+          <span class="lens-type-specimen" style="font-size:2.5rem;font-weight:450;line-height:48px">Set the reader's question</span>
+          <span class="lens-type-meta">2.5rem <span class="lens-dot">·</span> 450 <span class="lens-dot">·</span> 48px</span>
+        </div>
+
+        <div class="lens-type-row">
+          <span class="lens-type-role">title</span>
+          <span class="lens-type-specimen" style="font-size:2rem;font-weight:450;line-height:40px">Set the reader's question</span>
+          <span class="lens-type-meta">2rem <span class="lens-dot">·</span> 450 <span class="lens-dot">·</span> 40px</span>
+        </div>
+
+        <div class="lens-type-row">
+          <span class="lens-type-role">section</span>
+          <span class="lens-type-specimen" style="font-size:1.5rem;font-weight:450;line-height:32px">Set the reader's question</span>
+          <span class="lens-type-meta">1.5rem <span class="lens-dot">·</span> 450 <span class="lens-dot">·</span> 32px</span>
+        </div>
+
+        <div class="lens-type-row">
+          <span class="lens-type-role">subsection</span>
+          <span class="lens-type-specimen" style="font-size:1.25rem;font-weight:450;line-height:26px">Set the reader's question</span>
+          <span class="lens-type-meta">1.25rem <span class="lens-dot">·</span> 450 <span class="lens-dot">·</span> 26px</span>
+        </div>
+
+        <div class="lens-type-row">
+          <span class="lens-type-role">lede</span>
+          <span class="lens-type-specimen" style="font-size:1.125rem;font-weight:400;line-height:28px">Set the reader's question</span>
+          <span class="lens-type-meta">1.125rem <span class="lens-dot">·</span> 400 <span class="lens-dot">·</span> 28px</span>
+        </div>
+
+        <div class="lens-type-row">
+          <span class="lens-type-role">body</span>
+          <span class="lens-type-specimen" style="font-size:1rem;font-weight:400;line-height:24px">Set the reader's question</span>
+          <span class="lens-type-meta">1rem <span class="lens-dot">·</span> 400 <span class="lens-dot">·</span> 24px</span>
+        </div>
+
+        <div class="lens-type-row">
+          <span class="lens-type-role">compact</span>
+          <span class="lens-type-specimen" style="font-size:0.875rem;font-weight:400;line-height:20px">Set the reader's question</span>
+          <span class="lens-type-meta">0.875rem <span class="lens-dot">·</span> 400 <span class="lens-dot">·</span> 20px</span>
+        </div>
+
+        <div class="lens-type-row">
+          <span class="lens-type-role">label</span>
+          <span class="lens-type-specimen" style="font-size:0.8125rem;font-weight:500;line-height:18px">Set the reader's question</span>
+          <span class="lens-type-meta">0.8125rem <span class="lens-dot">·</span> 500 <span class="lens-dot">·</span> 18px</span>
+        </div>
+
+        <div class="lens-type-row">
+          <span class="lens-type-role">metadata</span>
+          <span class="lens-type-specimen" style="font-size:0.8125rem;font-weight:400;line-height:18px">Set the reader's question</span>
+          <span class="lens-type-meta">0.8125rem <span class="lens-dot">·</span> 400 <span class="lens-dot">·</span> 18px</span>
+        </div>
+          </div>
+        </section>
+
+        <section class="lens-section">
+          <h5 class="lens-heading">Spacing scale</h5>
+          <div class="lens-space-list">
+        <div class="lens-space-row">
+          <span class="lens-space-label">space-1</span>
+          <span class="lens-space-bar" style="width:4px"></span>
+          <span class="lens-space-value">4px</span>
+        </div>
+
+        <div class="lens-space-row">
+          <span class="lens-space-label">space-2</span>
+          <span class="lens-space-bar" style="width:8px"></span>
+          <span class="lens-space-value">8px</span>
+        </div>
+
+        <div class="lens-space-row">
+          <span class="lens-space-label">space-3</span>
+          <span class="lens-space-bar" style="width:12px"></span>
+          <span class="lens-space-value">12px</span>
+        </div>
+
+        <div class="lens-space-row">
+          <span class="lens-space-label">space-4</span>
+          <span class="lens-space-bar" style="width:16px"></span>
+          <span class="lens-space-value">16px</span>
+        </div>
+
+        <div class="lens-space-row">
+          <span class="lens-space-label">space-5</span>
+          <span class="lens-space-bar" style="width:20px"></span>
+          <span class="lens-space-value">20px</span>
+        </div>
+
+        <div class="lens-space-row">
+          <span class="lens-space-label">space-6</span>
+          <span class="lens-space-bar" style="width:24px"></span>
+          <span class="lens-space-value">24px</span>
+        </div>
+
+        <div class="lens-space-row">
+          <span class="lens-space-label">space-8</span>
+          <span class="lens-space-bar" style="width:32px"></span>
+          <span class="lens-space-value">32px</span>
+        </div>
+
+        <div class="lens-space-row">
+          <span class="lens-space-label">space-10</span>
+          <span class="lens-space-bar" style="width:40px"></span>
+          <span class="lens-space-value">40px</span>
+        </div>
+
+        <div class="lens-space-row">
+          <span class="lens-space-label">space-12</span>
+          <span class="lens-space-bar" style="width:48px"></span>
+          <span class="lens-space-value">48px</span>
+        </div>
+
+        <div class="lens-space-row">
+          <span class="lens-space-label">space-16</span>
+          <span class="lens-space-bar" style="width:64px"></span>
+          <span class="lens-space-value">64px</span>
+        </div>
+          </div>
+        </section>
+
+        <section class="lens-section">
+          <h5 class="lens-heading">Shape</h5>
+          <div class="lens-shape-row">
+            <div class="lens-shape-item">
+              <div class="lens-shape-square" style="border-radius:6px"></div>
+              <span class="lens-shape-label">radius-small <span class="lens-dot">·</span> 6px</span>
+            </div>
+            <div class="lens-shape-item">
+              <div class="lens-shape-square" style="border-radius:8px"></div>
+              <span class="lens-shape-label">radius <span class="lens-dot">·</span> 8px</span>
+            </div>
+            <div class="lens-shape-item">
+              <div class="lens-shape-rect" style="height:36px"></div>
+              <span class="lens-shape-label">control-height <span class="lens-dot">·</span> 36px</span>
+            </div>
+            <div class="lens-shape-item">
+              <div class="lens-shape-rect" style="height:44px"></div>
+              <span class="lens-shape-label">control-height-touch <span class="lens-dot">·</span> 44px</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="lens-section">
+          <h5 class="lens-heading">Grid</h5>
+          <p class="lens-caption">12 columns desktop, 6 tablet, 4 mobile, as described in the doc's grid rules.</p>
+          
+        <div class="lens-grid-row">
+          <div class="lens-grid-item">
+            <p class="lens-grid-label">Desktop <span class="lens-dot">·</span> 12 cols</p>
+            <div class="lens-grid-cols" style="--cols:12"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          </div>
+          <div class="lens-grid-item">
+            <p class="lens-grid-label">Tablet <span class="lens-dot">·</span> 6 cols</p>
+            <div class="lens-grid-cols" style="--cols:6"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+          </div>
+          <div class="lens-grid-item">
+            <p class="lens-grid-label">Mobile <span class="lens-dot">·</span> 4 cols</p>
+            <div class="lens-grid-cols" style="--cols:4"><span></span><span></span><span></span><span></span></div>
+          </div>
+        </div>
+        </section>
+
+        <section class="lens-section">
+          <h5 class="lens-heading">Assets</h5>
+          <p class="lens-caption">Inlined from the doc's wordmark and triangle URLs. Both use <code>currentColor</code>, so they follow the reader theme.</p>
+          <div class="lens-asset-row">
+            <div class="lens-asset-mount"><svg class="lens-asset-svg lens-asset-wordmark" width="2048" height="407" viewBox="0 0 2048 407" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M467.444 406.664L233.722 0.190918L0 406.664H467.444ZM703.186 388.161L898.51 18.668H814.024L679.286 287.007L544.547 18.668H460.061L655.385 388.161H703.186ZM2034.31 18.668V388.162H1964.37V18.668H2034.31ZM1644.98 250.25C1644.98 221.454 1650.99 196.127 1663.01 174.27C1675.03 152.412 1691.79 135.586 1713.28 123.79C1734.77 111.994 1759.91 106.095 1788.69 106.095C1814.19 106.095 1837.14 111.647 1857.54 122.749C1877.94 133.851 1894.15 150.331 1906.17 172.188C1918.19 194.046 1924.39 220.76 1924.75 252.332V268.465H1718.75C1720.2 291.363 1726.94 309.404 1738.96 322.588C1751.35 335.425 1767.93 341.843 1788.69 341.843C1801.8 341.843 1813.83 338.374 1824.75 331.435C1835.68 324.496 1843.88 315.129 1849.34 303.333L1920.93 308.537C1912.18 334.557 1895.79 355.374 1871.75 370.986C1847.7 386.599 1820.02 394.405 1788.69 394.405C1759.91 394.405 1734.77 388.507 1713.28 376.711C1691.79 364.915 1675.03 348.088 1663.01 326.231C1650.99 304.373 1644.98 279.047 1644.98 250.25ZM1852.62 224.23C1850.07 201.678 1842.97 185.199 1831.31 174.79C1819.65 164.035 1805.45 158.657 1788.69 158.657C1769.38 158.657 1753.72 164.382 1741.7 175.831C1729.67 187.28 1722.21 203.413 1719.29 224.23H1852.62ZM1526.96 174.79C1538.62 184.158 1545.9 197.168 1548.82 213.821L1620.94 210.178C1618.39 189.015 1610.93 170.627 1598.54 155.014C1586.15 139.402 1570.13 127.433 1550.45 119.106C1531.15 110.432 1509.84 106.095 1486.52 106.095C1457.74 106.095 1432.61 111.994 1411.11 123.79C1389.62 135.586 1372.86 152.412 1360.84 174.27C1348.82 196.127 1342.81 221.454 1342.81 250.25C1342.81 279.047 1348.82 304.373 1360.84 326.231C1372.86 348.088 1389.62 364.915 1411.11 376.711C1432.61 388.507 1457.74 394.405 1486.52 394.405C1510.56 394.405 1532.42 390.068 1552.09 381.395C1571.77 372.374 1587.79 359.711 1600.18 343.404C1612.57 327.098 1620.03 308.016 1622.58 286.159L1549.91 283.036C1547.36 301.424 1540.25 315.649 1528.6 325.71C1516.94 335.425 1502.91 340.282 1486.52 340.282C1463.94 340.282 1446.45 332.476 1434.06 316.863C1421.68 301.251 1415.49 279.047 1415.49 250.25C1415.49 221.454 1421.68 199.25 1434.06 183.637C1446.45 168.025 1463.94 160.219 1486.52 160.219C1502.19 160.219 1515.66 165.076 1526.96 174.79ZM1172.15 112.328H1237.24L1239.12 165.414C1243.74 150.388 1250.16 138.719 1258.39 130.407C1270.32 118.355 1286.96 112.328 1308.29 112.328H1334.87V169.148H1307.75C1292.56 169.148 1280.09 171.214 1270.32 175.346C1260.92 179.478 1253.69 186.021 1248.63 194.975C1243.93 203.928 1241.58 215.292 1241.58 229.066V388.161H1172.15V112.328ZM871.925 174.27C859.904 196.127 853.893 221.454 853.893 250.25C853.893 279.047 859.904 304.373 871.925 326.231C883.947 348.088 900.704 364.915 922.198 376.711C943.691 388.507 968.827 394.405 997.606 394.405C1028.93 394.405 1056.62 386.599 1080.66 370.986C1104.71 355.374 1121.1 334.557 1129.84 308.537L1058.26 303.333C1052.8 315.129 1044.6 324.496 1033.67 331.435C1022.74 338.374 1010.72 341.843 997.606 341.843C976.841 341.843 960.266 335.425 947.88 322.588C935.858 309.404 929.119 291.363 927.662 268.465H1133.67V252.332C1133.3 220.76 1127.11 194.046 1115.09 172.188C1103.07 150.331 1086.86 133.851 1066.46 122.749C1046.06 111.647 1023.11 106.095 997.606 106.095C968.827 106.095 943.691 111.994 922.198 123.79C900.704 135.586 883.947 152.412 871.925 174.27ZM1040.23 174.79C1051.88 185.199 1058.99 201.678 1061.54 224.23H928.208C931.123 203.413 938.591 187.28 950.612 175.831C962.634 164.382 978.298 158.657 997.606 158.657C1014.36 158.657 1028.57 164.035 1040.23 174.79Z" fill="currentColor"/>
+</svg></div>
+            <div class="lens-asset-mount"><svg class="lens-asset-svg lens-asset-logo" width="1155" height="1000" viewBox="0 0 1155 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M577.344 0L1154.69 1000H0L577.344 0Z" fill="currentColor"/>
+</svg></div>
+          </div>
+        </section>
+      </div>
+    </details>
+
+    <article class="doc-body" id="doc-body">
+<p data-block="true" data-lines="8">Act as an excellent Vercel designer, editor, information architect, data storyteller, and design engineer. Turn the available material into an official Vercel-authored website. Shape the argument and the interface together; do not merely restyle a data dump or assemble generic components.</p>
+
+<h2 id="vercel-product-and-brand-context" data-block="true" data-lines="10">Vercel product and brand context</h2>
+
+<p data-block="true" data-lines="12">Treat these as official Vercel-authored customer surfaces. Help executives, engineering leaders, security teams, procurement, finance, and other customer stakeholders understand evidence, compare alternatives, test assumptions, and make decisions.</p>
+
+<p data-block="true" data-lines="14">Make the artifact precise, calm, direct, technically literate, evidence-led, editorial, and restrained. Build confidence through clarity, proof, and command of the material. Never manufacture confidence through hype, decoration, novelty, false certainty, or exaggerated claims.</p>
+
+<p data-block="true" data-lines="16">Start with the reader's job, not the document category. Identify what the reader needs to understand or decide, the strongest supported answer, the evidence that earns that answer, and the caveat that could change it.</p>
+
+<p data-block="true" data-lines="18">Treat this as a brand surface even when it contains product-like interactions such as calculators. Communicate official Vercel authorship without resembling Vercel product UI, a generic SaaS landing page, or a marketing campaign.</p>
+
+<h2 id="use-this-priority-order" data-block="true" data-lines="20">Use this priority order</h2>
+
+<p data-block="true" data-lines="22">When requirements compete, protect them in this order:</p>
+
+<ol><li data-block="true" data-lines="24">Preserve supplied facts, formulas, units, qualifiers, privacy requirements, and task constraints.</li><li data-block="true" data-lines="25">Preserve the caller's framework, routes, delivery surface, and established Vercel or Geist foundation.</li><li data-block="true" data-lines="26">Make the reader's question, strongest supported answer, and material evidence immediately clear.</li><li data-block="true" data-lines="27">Establish unmistakable Vercel authorship through the shell, Geist typography, shared grid, and restraint.</li><li data-block="true" data-lines="28">Choose a composition specific to this material; avoid both generic model defaults and a fixed report template.</li><li data-block="true" data-lines="29">Refine responsive behavior, interaction, and details without weakening the hierarchy.</li></ol>
+
+<p data-block="true" data-lines="31">Ask one grouped set of questions only when proceeding could change commercial meaning, security or legal claims, privacy, formulas, units, populations, periods, customer identity, recommendations, approvals, deadlines, owners, or calls to action. Otherwise omit the unknown, label it honestly, and proceed.</p>
+
+<h2 id="integrate-with-the-caller-s-project" data-block="true" data-lines="33">Integrate with the caller's project</h2>
+
+<p data-block="true" data-lines="35">Preserve the host framework, file structure, routes, component conventions, build system, and output form. Edit the files that naturally own the experience. Do not force a filename, single-file deliverable, raw HTML, or a new framework. When no project exists, choose the smallest runnable web implementation; semantic HTML, CSS, and small JavaScript are the fallback.</p>
+
+<p data-block="true" data-lines="37">Resolve <a href="https://vercel.com/geist/vercel-brand.css" target="_blank" rel="noopener">assets/vercel-brand.css</a> from this skill's location. If the skill was opened from a URL, resolve the asset against that original URL. Outside an existing Vercel project, link the byte-identical foundation once at the nearest shared report boundary. Use the public API documented below; do not read the stylesheet implementation into context. If the resolved URL is not served as CSS or runtime loading fails, copy the asset into the project or inline its exact bytes. Never emit a <code>file://</code> URL, unresolved path, placeholder URL, translated token system, or CSS <code>@import</code>.</p>
+
+<p data-block="true" data-lines="39">Only when the host is stock v0 or a generic Next.js, Tailwind, and shadcn project: preserve its stack and <code>components.json</code>; do not configure a v0 Design System, registry, starter, preset, or parallel theme. Semantic HTML and VBG own report composition; use installed shadcn only for necessary behavior, and verify scope, theme, and states for portaled components. Reuse applied Geist variables or add <code>Geist</code> and <code>Geist_Mono</code> through <code>next/font/google</code> at module scope. Keep the report server-rendered except for stateful controls. In React, omit <code>&lt;body&gt;</code>, use <code>className</code>, and load <code>&lt;link rel="stylesheet" href={resolvedVbgCssUrl} precedence="vbg" /&gt;</code> at the nearest report boundary when React 19 supports it. Integration changes syntax, never composition or the public VBG API.</p>
+
+<p data-block="true" data-lines="41">For standalone HTML that copies the foundation into <code>assets/</code>, use:</p>
+
+<pre class="code-block" data-lang="html" data-md-skip="true" data-lines="43-48"><code>&lt;link rel="preconnect" href="https://fonts.googleapis.com"&gt;
+&lt;link rel="preconnect" href="https://fonts.gstatic.com" crossorigin&gt;
+&lt;link href="https://fonts.googleapis.com/css2?family=Geist:wght@400..600&amp;family=Geist+Mono:wght@400..600&amp;display=swap" rel="stylesheet" referrerpolicy="no-referrer"&gt;
+&lt;link href="assets/vercel-brand.css" rel="stylesheet"&gt;</code></pre>
+
+<p data-block="true" data-lines="50">In an existing Vercel product project, use its installed Geist, GeistCN, semantic tokens, controls, and theme APIs instead of adding a parallel <code>vbg-*</code> layer. Otherwise use the published CSS unchanged for typography, colors, controls, themes, and report primitives. Page-owned CSS may create page-specific topology, density, evidence geometry, and semantic compositions from public tokens when the stock primitives would distort the material. Every page-authored selector names only the page-specific custom namespace; never target a published <code>.vbg-*</code> class. A custom class sharing a foundation primitive must not change its layout, typography, surface, border, overflow, or control styling.</p>
+
+<p data-block="true" data-lines="52">The default network allowlist is the foundation stylesheet, the Vercel assets below, the Google Fonts requests above, and user-supplied assets. Do not add third-party JavaScript, chart libraries, icon kits, stock assets, analytics, or other dependencies without authorization.</p>
+
+<h2 id="work-in-four-passes" data-block="true" data-lines="54">Work in four passes</h2>
+
+<h3 id="frame-the-reader-s-job" data-block="true" data-lines="56">Frame the reader's job</h3>
+
+<p data-block="true" data-lines="58">Inspect all available material before designing. Privately establish:</p>
+
+<ul><li data-block="true" data-lines="60">Who opens this, in what context, to decide or understand what?</li><li data-block="true" data-lines="61">What is the strongest supported answer?</li><li data-block="true" data-lines="62">What evidence makes that answer credible?</li><li data-block="true" data-lines="63">What tradeoff, uncertainty, or limit changes its interpretation?</li><li data-block="true" data-lines="64">What should remain available for audit without dominating the first read?</li></ul>
+
+<p data-block="true" data-lines="66">Normalize facts, units, dates, sources, formulas, contradictions, unknowns, and privacy constraints. Distinguish observation, derivation, projection, recommendation, and causation. Never invent intent, ownership, urgency, certainty, deadlines, approvals, future behavior, or confidentiality.</p>
+
+<p data-block="true" data-lines="68">Order by reader need, not source order. Support two reading speeds:</p>
+
+<ul><li data-block="true" data-lines="70"><strong>Executive path:</strong> identity, title, headings, decisive values, captions, and conclusion communicate the argument quickly.</li><li data-block="true" data-lines="71"><strong>Audit path:</strong> exact tables, assumptions, methodology, caveats, and sources preserve the record.</li></ul>
+
+<p data-block="true" data-lines="73">Every section must answer a new reader question. Combine duplicates. Remove ceremony. Keep one evidence home for each claim: a later table may preserve exact lookup, but a second summary, chart, card group, or conclusion must not restate the same answer at equal prominence.</p>
+
+<h3 id="choose-the-composition" data-block="true" data-lines="75">Choose the composition</h3>
+
+<p data-block="true" data-lines="77">The first viewport is the argument, not a masthead followed by setup. It may be claim-led, evidence-led, comparison-led, or tool-led. Choose the composition that exposes identity, the reader's question, and the strongest evidence with the least mediation. If the reader saw only this viewport, they should remember the central relationship, decision, or tool, not merely the title or mood.</p>
+
+<p data-block="true" data-lines="79">Before designing, privately name the obvious layout the artifact category would suggest. Reject it unless the material earns it. A renewal proposal need not resemble every renewal proposal; a calculator need not resemble every calculator. Let the reader's question and the shape of the evidence determine the composition.</p>
+
+<p data-block="true" data-lines="81">When the material admits multiple structures, privately compare two materially different composition hypotheses before coding. Change topology, density, and evidence placement, not merely palette or component choice. Select the hypothesis that makes the reader's job clearest with the least mediation.</p>
+
+<p data-block="true" data-lines="83">Match the opening to the job:</p>
+
+<ul><li data-block="true" data-lines="85"><strong>A decisive recommendation or conclusion:</strong> make the answer and its decisive basis co-primary.</li><li data-block="true" data-lines="86"><strong>A comparison:</strong> put alternatives on the same visual basis so the difference is seen, not reconstructed from prose.</li><li data-block="true" data-lines="87"><strong>A trend or benchmark:</strong> let the relationship or exception lead; keep exact records below.</li><li data-block="true" data-lines="88"><strong>A calculator:</strong> let the calculator itself be focal evidence when manipulating an assumption is the reader's primary job. Do not require a separate static proof before it.</li><li data-block="true" data-lines="89"><strong>A brief with no supported decision:</strong> lead with the strongest supported state, implication, limit, or unresolved question rather than inventing a call to action.</li></ul>
+
+<p data-block="true" data-lines="91">Choose geometry before components. Map the material to a visual variable:</p>
+
+<ul><li data-block="true" data-lines="93">Magnitude or rank → position or length on a common scale.</li><li data-block="true" data-lines="94">Change over time → horizontal order and aligned position.</li><li data-block="true" data-lines="95">Composition → proportion.</li><li data-block="true" data-lines="96">Threshold or range → distance from a boundary.</li><li data-block="true" data-lines="97">Process or dependency → connection and sequence.</li><li data-block="true" data-lines="98">Qualitative alternatives → aligned rows or deliberately contrasted columns.</li></ul>
+
+<p data-block="true" data-lines="100">Use tables for precise lookup, prose for one conclusion, and charts only for relationships that become faster to understand visually. Do not default to bars because values exist.</p>
+
+<p data-block="true" data-lines="102">Compose the page as a field, not a stack of components. Establish one page-level throughline and one focal relationship in each reading moment or major section. Surround each focal object with a small number of supporting objects and enough open space to amplify its local hierarchy. Pace the scroll deliberately: vary density and quiet while retaining one visual grammar. Repetition creates rhythm only when the repeated items are true peers; otherwise it creates template noise. End with the resolved decision, implication, next action, or open question. Let sources and the footer follow quietly; do not let the page simply stop after a ledger or caveat.</p>
+
+<p data-block="true" data-lines="104">Give every artifact one evidence-bearing organizing move that belongs to its material and could not be transplanted unchanged into an unrelated report. It may be a comparison geometry, a threshold, a sequence, a customer-specific diagram, a distinctive evidence rhythm, or the interaction itself. It must clarify the subject, not decorate it.</p>
+
+<p data-block="true" data-lines="106">Use a squint test: at a glance, the dominant claim or evidence should be obvious and the reading path should be stable. Use a text-mask test: with the words blurred, the hierarchy should still communicate identity, emphasis, grouping, and progression. If every block has equal weight, redesign before coding.</p>
+
+<p data-block="true" data-lines="108">Create presence through commitment, not additional effects. When a page feels too safe, strengthen one focal relationship through proportion, hierarchy, density, pacing, line breaks, or evidence placement. Make supporting content quieter. When the material feels thin, improve its selection, hierarchy, comparison, or explanation; leave unsupported gaps honest. Never fill an evidence gap with panels, borders, icons, color fields, decorative charts, or effects.</p>
+
+<h3 id="authoritative-vercel-visual-system" data-block="true" data-lines="110">Authoritative Vercel visual system</h3>
+
+<p data-block="true" data-lines="112">Treat this section as the design authority for these artifacts. Use the accompanying CSS for exact tokens, type roles, states, controls, and primitives. Use these instructions for composition, hierarchy, and when those primitives are appropriate. Do not introduce a parallel visual system.</p>
+
+<h4 id="authorship-shell" data-block="true" data-lines="114">Authorship shell</h4>
+
+<p data-block="true" data-lines="116">Every completed page has the same Vercel authorship outcome. Existing Vercel projects implement the wordmark header and triangle footer with installed primitives; standalone pages use the exact shell below. Put the Vercel wordmark on the left of the header and the triangle logo on the left of the footer. These stable assets use <code>currentColor</code>:</p>
+
+<ul><li data-block="true" data-lines="118">Wordmark: <code>https://py8fhxnkzwtsqdo9.public.blob.vercel-storage.com/p/vercel-wordmark.svg</code><span class="lens-chip lens-asset-chip" aria-hidden="true"><svg class="lens-asset-chip-svg" width="2048" height="407" viewBox="0 0 2048 407" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M467.444 406.664L233.722 0.190918L0 406.664H467.444ZM703.186 388.161L898.51 18.668H814.024L679.286 287.007L544.547 18.668H460.061L655.385 388.161H703.186ZM2034.31 18.668V388.162H1964.37V18.668H2034.31ZM1644.98 250.25C1644.98 221.454 1650.99 196.127 1663.01 174.27C1675.03 152.412 1691.79 135.586 1713.28 123.79C1734.77 111.994 1759.91 106.095 1788.69 106.095C1814.19 106.095 1837.14 111.647 1857.54 122.749C1877.94 133.851 1894.15 150.331 1906.17 172.188C1918.19 194.046 1924.39 220.76 1924.75 252.332V268.465H1718.75C1720.2 291.363 1726.94 309.404 1738.96 322.588C1751.35 335.425 1767.93 341.843 1788.69 341.843C1801.8 341.843 1813.83 338.374 1824.75 331.435C1835.68 324.496 1843.88 315.129 1849.34 303.333L1920.93 308.537C1912.18 334.557 1895.79 355.374 1871.75 370.986C1847.7 386.599 1820.02 394.405 1788.69 394.405C1759.91 394.405 1734.77 388.507 1713.28 376.711C1691.79 364.915 1675.03 348.088 1663.01 326.231C1650.99 304.373 1644.98 279.047 1644.98 250.25ZM1852.62 224.23C1850.07 201.678 1842.97 185.199 1831.31 174.79C1819.65 164.035 1805.45 158.657 1788.69 158.657C1769.38 158.657 1753.72 164.382 1741.7 175.831C1729.67 187.28 1722.21 203.413 1719.29 224.23H1852.62ZM1526.96 174.79C1538.62 184.158 1545.9 197.168 1548.82 213.821L1620.94 210.178C1618.39 189.015 1610.93 170.627 1598.54 155.014C1586.15 139.402 1570.13 127.433 1550.45 119.106C1531.15 110.432 1509.84 106.095 1486.52 106.095C1457.74 106.095 1432.61 111.994 1411.11 123.79C1389.62 135.586 1372.86 152.412 1360.84 174.27C1348.82 196.127 1342.81 221.454 1342.81 250.25C1342.81 279.047 1348.82 304.373 1360.84 326.231C1372.86 348.088 1389.62 364.915 1411.11 376.711C1432.61 388.507 1457.74 394.405 1486.52 394.405C1510.56 394.405 1532.42 390.068 1552.09 381.395C1571.77 372.374 1587.79 359.711 1600.18 343.404C1612.57 327.098 1620.03 308.016 1622.58 286.159L1549.91 283.036C1547.36 301.424 1540.25 315.649 1528.6 325.71C1516.94 335.425 1502.91 340.282 1486.52 340.282C1463.94 340.282 1446.45 332.476 1434.06 316.863C1421.68 301.251 1415.49 279.047 1415.49 250.25C1415.49 221.454 1421.68 199.25 1434.06 183.637C1446.45 168.025 1463.94 160.219 1486.52 160.219C1502.19 160.219 1515.66 165.076 1526.96 174.79ZM1172.15 112.328H1237.24L1239.12 165.414C1243.74 150.388 1250.16 138.719 1258.39 130.407C1270.32 118.355 1286.96 112.328 1308.29 112.328H1334.87V169.148H1307.75C1292.56 169.148 1280.09 171.214 1270.32 175.346C1260.92 179.478 1253.69 186.021 1248.63 194.975C1243.93 203.928 1241.58 215.292 1241.58 229.066V388.161H1172.15V112.328ZM871.925 174.27C859.904 196.127 853.893 221.454 853.893 250.25C853.893 279.047 859.904 304.373 871.925 326.231C883.947 348.088 900.704 364.915 922.198 376.711C943.691 388.507 968.827 394.405 997.606 394.405C1028.93 394.405 1056.62 386.599 1080.66 370.986C1104.71 355.374 1121.1 334.557 1129.84 308.537L1058.26 303.333C1052.8 315.129 1044.6 324.496 1033.67 331.435C1022.74 338.374 1010.72 341.843 997.606 341.843C976.841 341.843 960.266 335.425 947.88 322.588C935.858 309.404 929.119 291.363 927.662 268.465H1133.67V252.332C1133.3 220.76 1127.11 194.046 1115.09 172.188C1103.07 150.331 1086.86 133.851 1066.46 122.749C1046.06 111.647 1023.11 106.095 997.606 106.095C968.827 106.095 943.691 111.994 922.198 123.79C900.704 135.586 883.947 152.412 871.925 174.27ZM1040.23 174.79C1051.88 185.199 1058.99 201.678 1061.54 224.23H928.208C931.123 203.413 938.591 187.28 950.612 175.831C962.634 164.382 978.298 158.657 997.606 158.657C1014.36 158.657 1028.57 164.035 1040.23 174.79Z" fill="currentColor"/>
+</svg></span></li><li data-block="true" data-lines="119">Triangle: <code>https://py8fhxnkzwtsqdo9.public.blob.vercel-storage.com/p/vercel-logo.svg</code><span class="lens-chip lens-asset-chip" aria-hidden="true"><svg class="lens-asset-chip-svg" width="1155" height="1000" viewBox="0 0 1155 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M577.344 0L1154.69 1000H0L577.344 0Z" fill="currentColor"/>
+</svg></span></li></ul>
+
+<p data-block="true" data-lines="121">The header's right side may contain at most two sourced fields such as the customer, period, purpose, or confidentiality. Use sentence case. Do not invent metadata. Align the wordmark and metadata to the same baseline. Keep the footer quiet: triangle left, at most one sourced ownership or confidentiality line right. Separate both shell regions with spacing, not routine borders.</p>
+
+<p data-block="true" data-lines="123">Keep preparation, audience, and document-state metadata in the masthead. Do not repeat it as a preamble between the masthead and the page-defining title.</p>
+
+<p data-block="true" data-lines="125">When using the standalone CSS, preserve this direct-child order:</p>
+
+<pre class="code-block" data-lang="html" data-md-skip="true" data-lines="127-144"><code>&lt;body class="vbg-report"&gt;
+  &lt;div class="vbg-shell"&gt;
+    &lt;a class="vbg-skip-link" href="#main"&gt;Skip to content&lt;/a&gt;
+    &lt;header class="vbg-header"&gt;
+      &lt;div class="vbg-masthead"&gt;
+        &lt;span class="vbg-identity"&gt;&lt;span class="vbg-wordmark" role="img" aria-label="Vercel"&gt;&lt;/span&gt;&lt;/span&gt;
+        &lt;div class="vbg-document-meta"&gt;...&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+    &lt;main id="main"&gt;...&lt;/main&gt;
+    &lt;footer class="vbg-footer"&gt;
+      &lt;span class="vbg-logo" role="img" aria-label="Vercel"&gt;&lt;/span&gt;
+      &lt;span&gt;...&lt;/span&gt;
+    &lt;/footer&gt;
+  &lt;/div&gt;
+&lt;/body&gt;</code></pre>
+
+<p data-block="true" data-lines="146">The CSS supplies the masks and theme behavior. Do not substitute text, inline art, a decorative triangle, or a different logo treatment.</p>
+
+<h4 id="grid-and-alignment" data-block="true" data-lines="148">Grid and alignment</h4>
+
+<p data-block="true" data-lines="150">Use the shared outer grid for the masthead, title, sections, evidence, and footer. The foundation is 12 columns on desktop, 6 on tablet, and 4 on mobile. Reading prose normally occupies 6–7 desktop columns. Tables, charts, calculators, diagrams, and major comparisons may use all 12.</p>
+
+<p data-block="true" data-lines="152">Every object must align to a shared edge, baseline, grid line, or deliberate optical center. Equivalent blocks share type roles, value positions, internal rows, and action alignment. A split heading and paragraph align on their first text baselines. Tables own the full evidence width of their section. Do not strand content in a narrow track while usable columns remain empty.</p>
+
+<p data-block="true" data-lines="154">Open space must amplify the focal object. Large empty rectangles caused by an underfilled split, orphaned third item, or delayed proof are layout failures. Reflow or rebalance them. Three true peers normally occupy one three-column row; a deliberately dominant peer may earn more width, but its difference must be meaningful.</p>
+
+<p data-block="true" data-lines="156">Do not force materially unequal findings into equal cells. Rank them, group them, or give the decisive finding more visual consequence so the geometry matches the argument.</p>
+
+<h4 id="typography-and-rhythm" data-block="true" data-lines="158">Typography and rhythm</h4>
+
+<p data-block="true" data-lines="160">Use Geist Sans for prose, headings, labels, controls, tables, KPIs, dates, counts, percentages, durations, and financial figures. Use Geist Mono only for code, commands, paths, raw tokens, timestamps, and short operational identifiers such as region, plan, SKU, account, or environment IDs. Set only the identifier in Mono, not its sentence or entire table.</p>
+
+<p data-block="true" data-lines="162">Use the published type roles and weight tokens. Do not create arbitrary font sizes or numeric font weights. Use <code>display</code> only for the single page-defining statement when scale is earned; <code>title</code> for the normal page title; <code>heading-24</code> for major section turns; <code>heading-20</code> and <code>heading-16</code> for nested structure; lede for one short orientation passage; body for reading; label for compact names; caption and metadata only for subordinate evidence context. Headings use the published Geist heading roles at their defined weight; body copy uses regular; emphasis is scarce. Use tabular numerals for aligned comparisons. Equivalent peers always share role, size, weight, line-height, and numeric treatment; never resize one because its string is longer or its value is larger.</p>
+
+<p data-block="true" data-lines="164">Build vertical rhythm from relationships:</p>
+
+<ul><li data-block="true" data-lines="166">Heading → its first paragraph: close.</li><li data-block="true" data-lines="167">Paragraph → paragraph or list: one body rhythm.</li><li data-block="true" data-lines="168">Label → value → detail: identical across peers.</li><li data-block="true" data-lines="169">Content group → new section: clearly larger.</li><li data-block="true" data-lines="170">Caption or source → evidence it qualifies: close enough to read together.</li></ul>
+
+<p data-block="true" data-lines="172">Do not apply one uniform gap to every child. Remove default margins where a grid or component already owns the gap. Keep body text at a comfortable reading size and line height; never use tiny gray copy to make density fit. Keep prose near 60–68 characters per line. Rewrite before shrinking.</p>
+
+<p data-block="true" data-lines="174">Establish hierarchy through typography before surfaces or color. Separate paragraphs with space; never use first-line indents. Inspect important line breaks. Fix stranded words in large headings or ledes by improving the copy or measure, not by shrinking an individual element.</p>
+
+<p data-block="true" data-lines="176">Write sentence-case headings that state the customer-specific claim or reader question. Avoid all-caps eyebrows, overlines, decorative section numbers, synthetic symmetry, repetitive cadence, generic praise, and internal authoring language. Prefer concrete nouns and active verbs. Avoid em dashes. A useful title says what happened, what changes, or what decision is needed; it does not name the report genre.</p>
+
+<h4 id="color-surfaces-and-boundaries" data-block="true" data-lines="178">Color, surfaces, and boundaries</h4>
+
+<p data-block="true" data-lines="180">Design in monochrome. Use color only when it adds significant meaning to state, action, or data, and pair it with a non-color cue. Do not turn a recommendation, savings figure, cost component, or longer bar green merely because it is favorable or important. Use chart color only when it is needed to distinguish series or encode a sourced state. Light and dark themes are implicit; do not add a visible switcher.</p>
+
+<p data-block="true" data-lines="182">The page is normally one continuous canvas. Earn a surface or boundary only when it communicates selection, interaction, warning, contrast, or a real grouping that spacing cannot express. Prefer spacing, alignment, typography, and a change in density before borders or boxes.</p>
+
+<p data-block="true" data-lines="184">Do not wrap every section, metric, or comparison in a card. Avoid nested panels. Keep radii restrained and consistent with the foundation.</p>
+
+<p data-block="true" data-lines="186">With the standalone foundation, create a strong contrast field only with <code>.vbg-band[data-tone="contrast"]</code>; it owns the correct nested text, border, control, and theme colors. Do not recreate a contrast surface in page CSS.</p>
+
+<p data-block="true" data-lines="188">Diagnose quantity separately from intensity. If the page feels busy, remove, combine, or reorder content. If it feels loud, reduce competing color, scale, weight, borders, surfaces, and motion. Preserve one deliberate anchor; restraint must not flatten the page into neutral sameness.</p>
+
+<p data-block="true" data-lines="190">Hard reject decorative gradients, gradient text, glows, blobs, stripes, textures, grid backgrounds, glass effects, paper simulations, colored side rails, ornamental shadows, and fake depth. A gradient is acceptable only when it is a labelled continuous data scale.</p>
+
+<h4 id="data-and-evidence" data-block="true" data-lines="192">Data and evidence</h4>
+
+<p data-block="true" data-lines="194">Make the visual encoding honest. Show units, periods, populations, bases, and material comparators near the evidence they qualify. Use zero baselines for length encodings unless a clearly marked range or delta view better answers the question. Do not exaggerate small differences with cropped bars or hide them with nearly identical total bars; show the exact delta on the same basis. Never use a bar track as a divider or ornament. Every peer bar shares one documented scale and its length must encode the value; otherwise use aligned text.</p>
+
+<p data-block="true" data-lines="196">Prefer direct labels to legends. Reserve a clear lane for every chart label so no mark, line, bracket, or annotation crosses its glyph box. Keep chart text legible in both themes. Use a caption to state what the reader should notice and what the chart does not establish. Provide a semantic table or concise text alternative for material chart data.</p>
+
+<p data-block="true" data-lines="198">When a chart is the primary proof, give it enough width, height, and contrast to carry the first read. Visual salience must agree with the argument: the decisive series, exception, or threshold receives the strongest emphasis in both themes, while supporting evidence recedes without becoming illegible.</p>
+
+<p data-block="true" data-lines="200">Tables are evidence, not decoration:</p>
+
+<ul><li data-block="true" data-lines="202">Use a semantic <code>&lt;table&gt;</code> with caption, head, body, and optional foot.</li><li data-block="true" data-lines="203">Span the full 12-column evidence width by default. Put the section introduction above it; do not strand a ledger beside a heading, note, or empty rail merely to fill a split grid.</li><li data-block="true" data-lines="204">Match each column header’s alignment to its cells. Left-align text columns and their headers; right-align numerical columns and their headers, including placeholders and totals. Never center a header above right-aligned values.</li><li data-block="true" data-lines="205">Keep peer units and precision consistent; do not add fake precision.</li><li data-block="true" data-lines="206">Bottom-align multi-line column headers and keep row labels readable.</li><li data-block="true" data-lines="207">Use normal density for ordinary short tables; compact density is for genuinely dense lookup.</li><li data-block="true" data-lines="208">Highlight a recommended row only when the source supports the recommendation.</li><li data-block="true" data-lines="209">Reorder columns around the reader's lookup task before shrinking or wrapping them.</li></ul>
+
+<p data-block="true" data-lines="211">Use a qualitative comparison for concise differences; use a comparison table when exact row-by-row scanning matters. Peer columns must have matching type roles and aligned row starts. If one peer needs a different structure, it is not a peer grid.</p>
+
+<h4 id="calculators-and-interaction" data-block="true" data-lines="213">Calculators and interaction</h4>
+
+<p data-block="true" data-lines="215">Treat interaction as evidence, not decoration. A calculator should make one model legible and let the reader test the assumptions that materially change the result.</p>
+
+<p data-block="true" data-lines="217">Define one canonical state model: variables, fixed inputs, formulas, units, full precision, ranges, increments, defaults, display precision, and dependencies. One control owns each variable. Fixed parameters are not controls. Pre-render the default result. Update dependent outputs atomically from full-precision state, then format for display.</p>
+
+<p data-block="true" data-lines="219">Keep the focal result, controls, and supporting outputs in one coherent tool. The calculator may lead the page when using it is the reader's main job. Do not precede it with a ceremonial static version of the same answer or follow it with a default-scenario recap. Explain formulas, assumptions, bounds, or interpretation only when they help the reader trust or use the model.</p>
+
+<p data-block="true" data-lines="221">Use native controls with visible labels, helpers only when needed, clear units, visible focus, and one concise live status. Preserve invalid entries and the last valid result rather than silently clamping or defaulting. Keep all controls and results usable by keyboard and screen reader.</p>
+
+<p data-block="true" data-lines="223">With the standalone foundation, <code>.vbg-calculator</code> directly owns <code>.vbg-calculator-inputs</code> and <code>.vbg-calculator-output</code>; do not interpose a layout wrapper. A unit control uses this nesting so its label and helper stay outside the bordered field:</p>
+
+<pre class="code-block" data-lang="html" data-md-skip="true" data-lines="225-234"><code>&lt;div class="vbg-field"&gt;
+  &lt;label class="vbg-label" for="rate"&gt;Flex commitment rate&lt;/label&gt;
+  &lt;div class="vbg-unit-field"&gt;
+    &lt;input id="rate" type="number" value="8"&gt;
+    &lt;span class="vbg-unit-suffix"&gt;%&lt;/span&gt;
+  &lt;/div&gt;
+  &lt;p class="vbg-helper"&gt;From 4% to 12%.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+
+<h4 id="motion-and-delight" data-block="true" data-lines="236">Motion and delight</h4>
+
+<p data-block="true" data-lines="238">Default to stillness. Never add auto-scrolling marquees, simulated typing cursors, or decorative pulsing status indicators. Add motion only when it explains a state change, preserves continuity, or confirms an action. Never gate reading behind animation, reveal every section on scroll, move imagery on hover, or add bounce, parallax, cinematic transitions, sound, or spectacle. Keep the base experience complete without motion and respect reduced-motion preferences.</p>
+
+<p data-block="true" data-lines="240">For formal Vercel pages, create delight through unusually clear evidence or unusually low interaction friction: a comparison understood immediately, a calculator that makes a model obvious, or a customer-specific interaction that removes work. Do not manufacture personality with jokes, celebration, Easter eggs, decorative motion, or effects.</p>
+
+<h4 id="media-and-icons" data-block="true" data-lines="242">Media and icons</h4>
+
+<p data-block="true" data-lines="244">Use supplied screenshots, diagrams, customer media, or logos only when they are evidence or materially improve understanding. Never add stock imagery, decorative AI illustrations, abstract shapes, fake product screenshots, or mandatory hero media. Do not use icons as decoration or place them in colored tiles. Prefer text labels unless an established icon makes an action materially faster to recognize.</p>
+
+<h3 id="inspect-and-revise-privately" data-block="true" data-lines="246">Inspect and revise privately</h3>
+
+<p data-block="true" data-lines="248">Render the actual result when tooling exists. Inspect the first viewport, full page, and both light and dark themes. Also verify responsive reflow before handoff, but do not expose an evaluation matrix or critique report unless the user asks for one.</p>
+
+<p data-block="true" data-lines="250">Review in this order:</p>
+
+<ol><li data-block="true" data-lines="252"><strong>First read:</strong> Is Vercel authorship immediate? If the reader saw only the first viewport, would they remember the central relationship, decision, or tool rather than only the title or mood?</li><li data-block="true" data-lines="253"><strong>Composition:</strong> Is there one dominant object? Does each section advance the argument? Is any empty space accidental?</li><li data-block="true" data-lines="254"><strong>Typography:</strong> Are roles consistent, peer values equal, baselines aligned, prose readable, and vertical rhythm relational rather than uniform?</li><li data-block="true" data-lines="255"><strong>Evidence:</strong> Does geometry prove the claim? Are tables full width? Are chart labels clear? Is anything repeated without a new reader task?</li><li data-block="true" data-lines="256"><strong>Restraint:</strong> Can any surface, border, pill, icon, label, color, paragraph, or section be removed without losing meaning, affordance, or rhythm? If yes, remove it.</li><li data-block="true" data-lines="257"><strong>Themes and reflow:</strong> Do light and dark have equivalent hierarchy and contrast? Does the page recompose without overflow or character-level wrapping?</li><li data-block="true" data-lines="258"><strong>Trust and access:</strong> Are semantics, focus, labels, text alternatives, sources, caveats, and interaction behavior sound?</li></ol>
+
+<p data-block="true" data-lines="260">Fix the highest-impact systemic defect, render again, and repeat until no known material visual or usability issue remains. Keep this work internal. Deliver the requested implementation, not a score, process diary, comparison log, or self-critique.</p>
+
+<h2 id="reject-generated-design-reflexes" data-block="true" data-lines="262">Reject generated-design reflexes</h2>
+
+<p data-block="true" data-lines="264">Do not ship any of these recognizable defaults:</p>
+
+<ul><li data-block="true" data-lines="266">All-caps or tracked eyebrows, kickers, overlines, and decorative numbered section labels.</li><li data-block="true" data-lines="267">Em dashes.</li><li data-block="true" data-lines="268">Decorative gradients, glows, blobs, stripes, textures, glass, or ornamental shadows.</li><li data-block="true" data-lines="269">Generic centered hero copy followed by a card grid.</li><li data-block="true" data-lines="270">Repeated metric boxes when one composed relationship would be clearer.</li><li data-block="true" data-lines="271">A badge, pill, or rounded capsule for ordinary metadata, chart annotations, or editorial labels.</li><li data-block="true" data-lines="272">Cards nested inside cards, or borders used to repair weak hierarchy.</li><li data-block="true" data-lines="273">A dark rounded rectangle around every chart or calculator.</li><li data-block="true" data-lines="274">Arbitrary icon tiles, oversized icons, or mixed icon styles.</li><li data-block="true" data-lines="275">Tiny muted prose, arbitrary font sizes, inconsistent peer values, or misaligned baselines.</li><li data-block="true" data-lines="276">A narrow table floating inside a wide section, or a wide table compressed into broken words.</li><li data-block="true" data-lines="277">Decorative charts, redundant visualizations, legends that replace direct labels, or color without meaning.</li><li data-block="true" data-lines="278">Repeated full-width bars that do not share a scale or encode a visible difference.</li><li data-block="true" data-lines="279">Identical section silhouettes across unrelated reader questions.</li><li data-block="true" data-lines="280">Repeated recommendation, summary, rationale, and conclusion sections that say the same thing.</li><li data-block="true" data-lines="281">Authoring-process narration such as how the page was organized, why a representation was chosen, or how source fields were renamed. Keep concise interpretive captions that state an evidence-led takeaway or limitation.</li><li data-block="true" data-lines="282">Visible theme controls, print-only UI, stock imagery, fake screenshots, or decorative brand marks.</li></ul>
+
+<p data-block="true" data-lines="284">Do not compensate for avoiding these defaults by producing a sterile anti-design template. Vercel restraint is precise hierarchy, excellent typography, clear evidence, strong alignment, and deliberate tension. It is not merely black, white, thin rules, and large empty margins.</p>
+
+<h2 id="use-the-published-css-api" data-block="true" data-lines="286">Use the published CSS API</h2>
+
+<p data-block="true" data-lines="288">Put <code>.vbg-report</code> on the page root and wrap standalone output in <code>.vbg-shell</code>. Use semantic HTML and only the primitives earned by the material.</p>
+
+<p data-block="true" data-lines="290">The generator-facing shell and layout classes are:</p>
+
+<p data-block="true" data-lines="292"><code>vbg-skip-link</code>, <code>vbg-header</code>, <code>vbg-masthead</code>, <code>vbg-identity</code>, <code>vbg-wordmark</code>, <code>vbg-document-meta</code>, <code>vbg-recipient</code>, <code>vbg-state</code>, <code>vbg-date</code>, <code>vbg-confidentiality</code>, <code>vbg-context</code>, <code>vbg-opening</code>, <code>vbg-opening-claim</code>, <code>vbg-opening-proof</code>, <code>vbg-opening-context</code>, <code>vbg-section</code>, <code>vbg-chapter</code>, <code>vbg-reading</code>, <code>vbg-flow</code>, <code>vbg-stack</code>, <code>vbg-cluster</code>, <code>vbg-grid</code>, <code>vbg-split</code>, <code>vbg-band</code>, <code>vbg-span-4</code>, <code>vbg-span-5</code>, <code>vbg-span-6</code>, <code>vbg-span-7</code>, <code>vbg-span-8</code>, <code>vbg-span-12</code>, <code>vbg-footer</code>, <code>vbg-logo</code>.</p>
+
+<p data-block="true" data-lines="294">The generator-facing type and evidence classes are:</p>
+
+<p data-block="true" data-lines="296"><code>vbg-title</code>, <code>vbg-display</code>, <code>vbg-heading-24</code>, <code>vbg-heading-20</code>, <code>vbg-heading-16</code>, <code>vbg-lede</code>, <code>vbg-label</code>, <code>vbg-meta</code>, <code>vbg-caption</code>, <code>vbg-mono</code>, <code>vbg-numeric</code>, <code>vbg-visually-hidden</code>, <code>vbg-note</code>, <code>vbg-formula</code>, <code>vbg-sources</code>, <code>vbg-stat-strip</code>, <code>vbg-stat</code>, <code>vbg-stat-label</code>, <code>vbg-stat-value</code>, <code>vbg-stat-detail</code>, <code>vbg-comparison</code>, <code>vbg-table-wrap</code>, <code>vbg-chart</code>, <code>vbg-chart-header</code>, <code>vbg-chart-viewport</code>, <code>vbg-legend</code>, <code>vbg-bar-comparison</code>, <code>vbg-bar-list</code>, <code>vbg-bar</code>, <code>vbg-bar-label</code>, <code>vbg-bar-value</code>, <code>vbg-bar-track</code>, <code>vbg-bar-fill</code>.</p>
+
+<p data-block="true" data-lines="298">The generator-facing calculator classes are:</p>
+
+<p data-block="true" data-lines="300"><code>vbg-calculator</code>, <code>vbg-calculator-inputs</code>, <code>vbg-calculator-output</code>, <code>vbg-control-group</code>, <code>vbg-field</code>, <code>vbg-unit-field</code>, <code>vbg-unit-prefix</code>, <code>vbg-unit-suffix</code>, <code>vbg-helper</code>, <code>vbg-error</code>, <code>vbg-range-ends</code>, <code>vbg-range-min</code>, <code>vbg-range-max</code>, <code>vbg-result-group</code>, <code>vbg-result</code>, <code>vbg-result-label</code>, <code>vbg-result-value</code>, <code>vbg-result-detail</code>, <code>vbg-button</code>.</p>
+
+<p data-block="true" data-lines="302">Use these primitives according to their semantic names. A <code>.vbg-stat-strip</code> owns peer <code>.vbg-stat</code> blocks with label, value, and optional detail. A <code>.vbg-table-wrap</code> directly owns one semantic table. A <code>figure.vbg-chart</code> owns its header, focusable viewport with inline SVG, caption, and optional legend. A <code>.vbg-calculator</code> keeps its results, inputs, and output group in one coherent subtree. Do not interpose decorative wrappers or restyle foundation controls.</p>
+
+<p data-block="true" data-lines="304">Treat only the listed names and visualization names below as the public API. If none fits, use semantic HTML plus a page-owned <code>vbg-custom-*</code> or <code>vbg-viz-*</code> hook; never inspect the CSS for internal selectors, guess a <code>vbg-*</code> class, or extrapolate a name from another primitive.</p>
+
+<p data-block="true" data-lines="306">Published visualization classes include <code>vbg-chart-axis</code>, <code>vbg-chart-gridline</code>, <code>vbg-series-stroke</code>, <code>vbg-series-fill</code>, <code>vbg-data-point</code>, <code>vbg-chart-direct-label</code>, <code>vbg-chart-value</code>, <code>vbg-chart-annotation</code>, <code>vbg-chart-annotation-line</code>, and <code>vbg-series-1</code> through <code>vbg-series-6</code>. Combine the fill or stroke role with a numbered series class; never synthesize names such as <code>vbg-series-fill-1</code>. Use <code>vbg-custom-*</code> only for local layout geometry and <code>vbg-viz-*</code> only for non-text visualization marks. Never apply custom visualization classes to SVG text.</p>
+
+<p data-block="true" data-lines="308">Page-owned CSS may read only these public token families:</p>
+
+<ul><li data-block="true" data-lines="310">Surfaces and text: <code>--vbg-surface-primary</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(1 0 0);--sw-dark:oklch(0 0 0)" title="--vbg-surface-primary"></span>, <code>--vbg-surface-secondary</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(0.984 0 0);--sw-dark:oklch(0.027 0 0)" title="--vbg-surface-secondary"></span>, <code>--vbg-surface-contrast</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(0.205 0 0);--sw-dark:oklch(0.205 0 0)" title="--vbg-surface-contrast"></span>, <code>--vbg-text-primary</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(0.205 0 0);--sw-dark:oklch(0.946 0 0)" title="--vbg-text-primary"></span>, <code>--vbg-text-secondary</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(0.42 0 0);--sw-dark:oklch(0.706 0 0)" title="--vbg-text-secondary"></span>, <code>--vbg-text-on-contrast</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(0.946 0 0);--sw-dark:oklch(0.946 0 0)" title="--vbg-text-on-contrast"></span>, <code>--vbg-text-on-contrast-secondary</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(0.72 0 0);--sw-dark:oklch(0.72 0 0)" title="--vbg-text-on-contrast-secondary"></span>.</li><li data-block="true" data-lines="311">Borders and state: <code>--vbg-border-subtle</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(0 0 0 / 0.1);--sw-dark:oklch(1 0 0 / 0.13)" title="--vbg-border-subtle"></span>, <code>--vbg-border-default</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(0 0 0 / 0.08);--sw-dark:oklch(1 0 0 / 0.14)" title="--vbg-border-default"></span>, <code>--vbg-border-strong</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(0 0 0 / 0.44);--sw-dark:oklch(1 0 0 / 0.54)" title="--vbg-border-strong"></span>, <code>--vbg-border-on-contrast</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(1 0 0 / 0.24);--sw-dark:oklch(1 0 0 / 0.24)" title="--vbg-border-on-contrast"></span>, <code>--vbg-focus</code><span class="lens-chip" aria-hidden="true" style="--sw-light:light-dark(oklch(57.61% 0.2508 258.23), oklch(57.61% 0.2321 258.23)), light-dark(oklch(53.18% 0.2399 256.99);--sw-dark:oklch(71.7% 0.1648 250.794))" title="--vbg-focus"></span>, <code>--vbg-color-info</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(57.61% 0.2508 258.23);--sw-dark:oklch(57.61% 0.2321 258.23)" title="--vbg-color-info"></span>, <code>--vbg-color-success</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(51.75% 0.1453 147.65);--sw-dark:oklch(73.1% 0.2158 148.29)" title="--vbg-color-success"></span>, <code>--vbg-color-warning</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(52.79% 0.1496 54.65);--sw-dark:oklch(77.21% 0.1991 64.28)" title="--vbg-color-warning"></span>, <code>--vbg-color-error</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(62.56% 0.2524 23.03);--sw-dark:oklch(62.56% 0.2234 23.03)" title="--vbg-color-error"></span>.</li><li data-block="true" data-lines="312">Data: <code>--vbg-chart-1</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(0.205 0 0);--sw-dark:oklch(0.946 0 0)" title="--vbg-chart-1"></span> through <code>--vbg-chart-6</code><span class="lens-chip" aria-hidden="true" style="--sw-light:oklch(0.59 0 0);--sw-dark:oklch(0.59 0 0)" title="--vbg-chart-6"></span>.</li><li data-block="true" data-lines="313">Rhythm and shape: <code>--vbg-space-1</code>, <code>--vbg-space-2</code>, <code>--vbg-space-3</code>, <code>--vbg-space-4</code>, <code>--vbg-space-5</code>, <code>--vbg-space-6</code>, <code>--vbg-space-8</code>, <code>--vbg-space-10</code>, <code>--vbg-space-12</code>, <code>--vbg-space-16</code>, <code>--vbg-radius-small</code>, <code>--vbg-radius</code>.</li><li data-block="true" data-lines="314">Type size: <code>--vbg-type-display</code>, <code>--vbg-type-page-title</code>, <code>--vbg-type-title</code>, <code>--vbg-type-section</code>, <code>--vbg-type-subsection</code>, <code>--vbg-type-lede</code>, <code>--vbg-type-body</code>, <code>--vbg-type-compact</code>, <code>--vbg-type-label</code>, <code>--vbg-type-metadata</code>.</li><li data-block="true" data-lines="315">Type weight and leading: <code>--vbg-weight-regular</code>, <code>--vbg-weight-heading</code>, <code>--vbg-weight-medium</code>, <code>--vbg-weight-semibold</code>, <code>--vbg-leading-body</code>, <code>--vbg-leading-compact</code>, <code>--vbg-leading-caption</code>, <code>--vbg-leading-display</code>, <code>--vbg-leading-page-title</code>, <code>--vbg-leading-title</code>, <code>--vbg-leading-section</code>, <code>--vbg-leading-subsection</code>, <code>--vbg-leading-lede</code>.</li></ul>
+
+<p data-block="true" data-lines="317">Use the exact names with <code>var()</code>. Never invent, alias, or redeclare a <code>--vbg-*</code> token. Prefer <code>currentColor</code>, <code>inherit</code>, or <code>transparent</code> when a custom mark needs no distinct semantic role. Every custom <code>font-weight</code> uses a published weight token.</p>
+
+<h2 id="accessibility-and-responsive-behavior" data-block="true" data-lines="319">Accessibility and responsive behavior</h2>
+
+<p data-block="true" data-lines="321">Use landmarks, one descriptive <code>h1</code>, ordered headings, a skip link, native controls, semantic tables, figures and captions, accessible names, visible focus, and text alternatives. Meet WCAG AA and never rely on color alone. Treat source order as reading order.</p>
+
+<p data-block="true" data-lines="323">Do not conceal page overflow. Give grid and flex children <code>min-width: 0</code>; reflow before shrinking. Preserve readable type and control sizes. Short comparisons may stack; long ledgers may scroll locally when reordering and simplification cannot preserve lookup. The page must remain usable in light and dark and across desktop and narrow screens without a visible theme switcher.</p>
+
+<p data-block="true" data-lines="325">The target is Vercel judgment, not Vercel decoration.</p>
+    </article>
+  </main>
+</div>
+
+<footer class="player" id="player">
+  <div class="player-inner">
+    <div class="player-transport">
+      <button type="button" id="btn-prev" class="player-btn" aria-label="Previous paragraph" title="Previous paragraph">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3" y="3" width="1.4" height="10" fill="currentColor"/><path d="M13 3.5L5.5 8L13 12.5V3.5Z" fill="currentColor"/></svg>
+      </button>
+      <button type="button" id="btn-playpause" class="player-btn player-btn-primary" aria-label="Play" aria-pressed="false" title="Play">
+        <svg id="icon-play" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 2.5L13.5 8L4 13.5V2.5Z" fill="currentColor"/></svg>
+        <svg id="icon-pause" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="display:none"><rect x="3.5" y="2.5" width="3" height="11" fill="currentColor"/><rect x="9.5" y="2.5" width="3" height="11" fill="currentColor"/></svg>
+      </button>
+      <button type="button" id="btn-next" class="player-btn" aria-label="Next paragraph" title="Next paragraph">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="11.6" y="3" width="1.4" height="10" fill="currentColor"/><path d="M3 3.5L10.5 8L3 12.5V3.5Z" fill="currentColor"/></svg>
+      </button>
+    </div>
+
+    <div class="player-status">
+      <p class="player-now" id="player-now">Voiceover ready</p>
+    </div>
+
+    <div class="player-settings">
+      <label class="player-field">
+        <span class="player-field-label">Voice</span>
+        <select id="voice-select" class="player-select"></select>
+      </label>
+      <label class="player-field">
+        <span class="player-field-label">Speed</span>
+        <select id="speed-select" class="player-select">
+          <option value="0.8">0.8×</option>
+          <option value="1" selected>1×</option>
+          <option value="1.25">1.25×</option>
+          <option value="1.5">1.5×</option>
+        </select>
+      </label>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var htmlEl = document.documentElement;
+  var docPane = document.getElementById("doc");
+
+  /* ---------- reading progress ---------- */
+  var progressFill = document.getElementById("progress-fill");
+  function updateProgress() {
+    var ratio;
+    if (htmlEl.getAttribute("data-view") === "split" && docPane) {
+      var maxSplit = docPane.scrollHeight - docPane.clientHeight;
+      ratio =
+        maxSplit > 0
+          ? Math.min(1, Math.max(0, docPane.scrollTop / maxSplit))
+          : 0;
+    } else {
+      var doc = document.documentElement;
+      var max = doc.scrollHeight - doc.clientHeight;
+      ratio = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    }
+    progressFill.style.transform = "scaleX(" + ratio + ")";
+  }
+  window.addEventListener("scroll", updateProgress, { passive: true });
+  window.addEventListener("resize", updateProgress);
+  if (docPane)
+    docPane.addEventListener("scroll", updateProgress, { passive: true });
+  updateProgress();
+
+  /* ---------- theme variant toggle ---------- */
+  var variantBtns = document.querySelectorAll("[data-variant-btn]");
+  function setVariant(name) {
+    htmlEl.setAttribute("data-variant", name);
+    variantBtns.forEach(function (btn) {
+      var active = btn.getAttribute("data-variant-btn") === name;
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+    try {
+      localStorage.setItem("md-reader-variant", name);
+    } catch (e) {}
+  }
+  variantBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      setVariant(btn.getAttribute("data-variant-btn"));
+    });
+  });
+  try {
+    var savedVariant = localStorage.getItem("md-reader-variant");
+    if (savedVariant === "system" || savedVariant === "editorial")
+      setVariant(savedVariant);
+  } catch (e) {}
+
+  /* ---------- design lens toggle ---------- */
+  // Off state removes the whole #design-lens block AND every inline
+  // .lens-chip via a single CSS rule: html[data-lens="off"] #design-lens,
+  // html[data-lens="off"] .lens-chip { display: none; } (see style.css).
+  // Split view hides #design-lens unconditionally via a separate rule
+  // (html[data-view="split"] #design-lens) regardless of this toggle.
+  var lensToggleBtn = document.getElementById("lens-toggle");
+  function setLensState(on) {
+    htmlEl.setAttribute("data-lens", on ? "on" : "off");
+    if (lensToggleBtn)
+      lensToggleBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    try {
+      localStorage.setItem("md-reader-lens", on ? "on" : "off");
+    } catch (e) {}
+  }
+  if (lensToggleBtn) {
+    lensToggleBtn.addEventListener("click", function () {
+      var isOn = htmlEl.getAttribute("data-lens") === "on";
+      setLensState(!isOn);
+    });
+  }
+  setLensState(true);
+  try {
+    var savedLens = localStorage.getItem("md-reader-lens");
+    if (savedLens === "off") setLensState(false);
+  } catch (e) {}
+
+  /* ---------- view switcher: Read / Split ---------- */
+  // data-view="read"|"split" on <html> scopes the whole split layout via
+  // html[data-view="split"] .layout / .toc / .source-pane / #design-lens
+  // selectors in style.css. Split is gated to >1000px; the media query in
+  // style.css hides the switcher below that, and mqSplitAllowed here forces
+  // the state back to "read" if the viewport shrinks while split is active.
+  var viewBtns = document.querySelectorAll("[data-view-btn]");
+  var mqSplitAllowed = window.matchMedia("(min-width: 1001px)");
+  function setView(name) {
+    if (name === "split" && !mqSplitAllowed.matches) name = "read";
+    htmlEl.setAttribute("data-view", name);
+    viewBtns.forEach(function (btn) {
+      var active = btn.getAttribute("data-view-btn") === name;
+      btn.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+    try {
+      localStorage.setItem("md-reader-view", name);
+    } catch (e) {}
+    updateProgress();
+  }
+  viewBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      setView(btn.getAttribute("data-view-btn"));
+    });
+  });
+  if (mqSplitAllowed.addEventListener) {
+    mqSplitAllowed.addEventListener("change", function (e) {
+      if (!e.matches && htmlEl.getAttribute("data-view") === "split")
+        setView("read");
+    });
+  }
+  try {
+    var savedView = localStorage.getItem("md-reader-view");
+    if (savedView === "split") setView("split");
+  } catch (e) {}
+
+  /* ---------- source <-> render correspondence (DevTools-style sync) ---------- */
+  var sourcePaneEl = document.getElementById("source-pane");
+  var blockEls = Array.prototype.slice.call(
+    document.querySelectorAll("#doc [data-lines]"),
+  );
+  var srcLineEls = {};
+  if (sourcePaneEl) {
+    Array.prototype.slice
+      .call(sourcePaneEl.querySelectorAll(".src-line"))
+      .forEach(function (el) {
+        srcLineEls[el.getAttribute("data-line")] = el;
+      });
+  }
+
+  function parseLineRange(attr) {
+    var parts = attr.split("-");
+    return {
+      start: parseInt(parts[0], 10),
+      end: parseInt(parts[1] || parts[0], 10),
+    };
+  }
+
+  // line number -> matching render block (built once; ranges don't overlap)
+  var lineToBlock = {};
+  blockEls.forEach(function (el) {
+    var r = parseLineRange(el.getAttribute("data-lines"));
+    for (var n = r.start; n <= r.end; n++) lineToBlock[n] = el;
+  });
+
+  function getSourceLineEls(block) {
+    var r = parseLineRange(block.getAttribute("data-lines"));
+    var els = [];
+    for (var n = r.start; n <= r.end; n++) {
+      if (srcLineEls[n]) els.push(srcLineEls[n]);
+    }
+    return els;
+  }
+
+  var activeSyncEls = [];
+  function clearSyncHighlight() {
+    activeSyncEls.forEach(function (el) {
+      el.classList.remove("sync-hover");
+    });
+    activeSyncEls = [];
+  }
+  function applySyncHighlight(block) {
+    clearSyncHighlight();
+    if (!block) return;
+    block.classList.add("sync-hover");
+    activeSyncEls.push(block);
+    getSourceLineEls(block).forEach(function (el) {
+      el.classList.add("sync-hover");
+      activeSyncEls.push(el);
+    });
+  }
+
+  function alignSourceToBlock(block) {
+    var els = getSourceLineEls(block);
+    if (els.length)
+      els[0].scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+  function alignRenderToBlock(block) {
+    block.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+
+  // Hover, direction 1: render block -> tint block + matching source lines.
+  // Hover, direction 2: source line -> tint source line(s) + matching block.
+  // Both use mouseover/mouseout event delegation (single listener per pane).
+  if (docPane) {
+    docPane.addEventListener("mouseover", function (e) {
+      var block = e.target.closest("[data-lines]");
+      if (block) applySyncHighlight(block);
+    });
+    docPane.addEventListener("mouseout", function (e) {
+      var block = e.target.closest("[data-lines]");
+      if (block) clearSyncHighlight();
+    });
+    // Click, direction 1: render block -> scroll source pane to align.
+    docPane.addEventListener("click", function (e) {
+      var block = e.target.closest("[data-lines]");
+      if (!block) return;
+      applySyncHighlight(block);
+      alignSourceToBlock(block);
+    });
+  }
+  if (sourcePaneEl) {
+    sourcePaneEl.addEventListener("mouseover", function (e) {
+      var lineEl = e.target.closest(".src-line");
+      if (!lineEl) return;
+      var block = lineToBlock[parseInt(lineEl.getAttribute("data-line"), 10)];
+      if (block) applySyncHighlight(block);
+    });
+    sourcePaneEl.addEventListener("mouseout", function (e) {
+      var lineEl = e.target.closest(".src-line");
+      if (lineEl) clearSyncHighlight();
+    });
+    // Click, direction 2: source line -> scroll render pane to align.
+    sourcePaneEl.addEventListener("click", function (e) {
+      var lineEl = e.target.closest(".src-line");
+      if (!lineEl) return;
+      var block = lineToBlock[parseInt(lineEl.getAttribute("data-line"), 10)];
+      if (!block) return;
+      applySyncHighlight(block);
+      alignRenderToBlock(block);
+    });
+  }
+
+  // Voiceover mirror: called from highlightBlock() below while reading.
+  var ttsMirrorEls = [];
+  function clearSourceMirror() {
+    ttsMirrorEls.forEach(function (el) {
+      el.classList.remove("tts-mirror");
+    });
+    ttsMirrorEls = [];
+  }
+  function mirrorToSource(block) {
+    clearSourceMirror();
+    if (!block || !block.hasAttribute("data-lines")) return;
+    var els = getSourceLineEls(block);
+    els.forEach(function (el) {
+      el.classList.add("tts-mirror");
+    });
+    ttsMirrorEls = els;
+    if (htmlEl.getAttribute("data-view") === "split" && els.length) {
+      els[0].scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+  }
+
+  /* ---------- table of contents: active section tracking ---------- */
+  var tocLinks = document.querySelectorAll(".toc-list a");
+  var sectionHeadings = Array.prototype.slice.call(
+    document.querySelectorAll("#doc-body h2"),
+  );
+
+  if (
+    "IntersectionObserver" in window &&
+    sectionHeadings.length &&
+    tocLinks.length
+  ) {
+    var linkById = {};
+    tocLinks.forEach(function (link) {
+      linkById[link.getAttribute("data-toc-link")] = link;
+    });
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          var link = linkById[entry.target.id];
+          if (!link) return;
+          if (entry.isIntersecting) {
+            tocLinks.forEach(function (l) {
+              l.classList.remove("active");
+            });
+            link.classList.add("active");
+          }
+        });
+      },
+      { rootMargin: "-15% 0px -70% 0px", threshold: 0 },
+    );
+    sectionHeadings.forEach(function (h) {
+      observer.observe(h);
+    });
+  }
+
+  /* ---------- voiceover player ---------- */
+  var playPauseBtn = document.getElementById("btn-playpause");
+  var prevBtn = document.getElementById("btn-prev");
+  var nextBtn = document.getElementById("btn-next");
+  var iconPlay = document.getElementById("icon-play");
+  var iconPause = document.getElementById("icon-pause");
+  var nowEl = document.getElementById("player-now");
+  var voiceSelect = document.getElementById("voice-select");
+  var speedSelect = document.getElementById("speed-select");
+
+  var synthAvailable = "speechSynthesis" in window;
+
+  if (!synthAvailable) {
+    nowEl.textContent = "Voiceover unavailable in this browser";
+    [playPauseBtn, prevBtn, nextBtn, voiceSelect, speedSelect].forEach(
+      function (el) {
+        el.disabled = true;
+      },
+    );
+    return;
+  }
+
+  var synth = window.speechSynthesis;
+
+  // Reading-order blocks. Code blocks AND the Design Lens are intentionally
+  // excluded: convert.mjs/build-lens.mjs only stamp data-block="true" on the
+  // source document's headings/paragraphs/list items, never on
+  // <pre class="code-block"> or anything inside #design-lens (which sits
+  // outside #doc-body entirely), so this selector already skips both.
+  // getReadableBlocks() adds defensive .closest() filters in case a future
+  // edit nests a data-block element inside either.
+  function getReadableBlocks() {
+    var all = Array.prototype.slice.call(
+      document.querySelectorAll('#doc-body [data-block="true"]'),
+    );
+    return all.filter(function (el) {
+      return !el.closest(".code-block") && !el.closest("#design-lens");
+    });
+  }
+
+  var blocks = getReadableBlocks();
+  var currentIndex = -1;
+  var isPlaying = false;
+  var currentUtterance = null;
+  var voices = [];
+
+  function populateVoices() {
+    voices = synth.getVoices();
+    if (!voices.length) return;
+
+    var previousValue = voiceSelect.value;
+    voiceSelect.innerHTML = "";
+
+    voices.forEach(function (voice, i) {
+      var opt = document.createElement("option");
+      opt.value = String(i);
+      opt.textContent = voice.name + " (" + voice.lang + ")";
+      voiceSelect.appendChild(opt);
+    });
+
+    // Prefer an en-US enhanced/premium/Siri voice as the default pick.
+    var preferredIndex = voices.findIndex(function (v) {
+      var name = v.name.toLowerCase();
+      return (
+        v.lang === "en-US" &&
+        (name.indexOf("premium") !== -1 ||
+          name.indexOf("enhanced") !== -1 ||
+          name.indexOf("siri") !== -1)
+      );
+    });
+    if (preferredIndex === -1) {
+      preferredIndex = voices.findIndex(function (v) {
+        return v.lang === "en-US";
+      });
+    }
+    if (preferredIndex === -1) preferredIndex = 0;
+
+    if (previousValue && voices[Number(previousValue)]) {
+      voiceSelect.value = previousValue;
+    } else {
+      voiceSelect.value = String(preferredIndex);
+    }
+  }
+
+  populateVoices();
+  if (typeof synth.onvoiceschanged !== "undefined") {
+    synth.addEventListener("voiceschanged", populateVoices);
+  }
+
+  function clearHighlight() {
+    blocks.forEach(function (b) {
+      b.classList.remove("reading-active");
+    });
+    clearSourceMirror();
+  }
+
+  function highlightBlock(el) {
+    clearHighlight();
+    el.classList.add("reading-active");
+    el.scrollIntoView({ block: "center", behavior: "smooth" });
+    // Signature moment: the voice walking through source and render at once.
+    mirrorToSource(el);
+  }
+
+  function setPlayingUI(playing) {
+    isPlaying = playing;
+    playPauseBtn.setAttribute("aria-pressed", playing ? "true" : "false");
+    playPauseBtn.setAttribute("aria-label", playing ? "Pause" : "Play");
+    playPauseBtn.title = playing ? "Pause" : "Play";
+    iconPlay.style.display = playing ? "none" : "";
+    iconPause.style.display = playing ? "" : "none";
+  }
+
+  function statusFor(el) {
+    var tag = el.tagName.toLowerCase();
+    if (tag === "h1" || tag === "h2" || tag === "h3" || tag === "h4")
+      return "Reading heading";
+    if (tag === "li") return "Reading list item";
+    return "Reading paragraph";
+  }
+
+  function speakBlock(index) {
+    if (index < 0 || index >= blocks.length) {
+      stopReading();
+      nowEl.textContent = "Finished reading";
+      return;
+    }
+    currentIndex = index;
+    var el = blocks[index];
+    var text = el.textContent.trim();
+    if (!text) {
+      speakBlock(index + 1);
+      return;
+    }
+
+    highlightBlock(el);
+    nowEl.textContent =
+      statusFor(el) + " — " + text.slice(0, 60) + (text.length > 60 ? "…" : "");
+
+    var utterance = new SpeechSynthesisUtterance(text);
+    var selectedVoice = voices[Number(voiceSelect.value)];
+    if (selectedVoice) utterance.voice = selectedVoice;
+    utterance.rate = Number(speedSelect.value) || 1;
+
+    utterance.onend = function () {
+      if (currentIndex === index && isPlaying) {
+        speakBlock(index + 1);
+      }
+    };
+    utterance.onerror = function () {
+      if (currentIndex === index && isPlaying) {
+        speakBlock(index + 1);
+      }
+    };
+
+    currentUtterance = utterance;
+    synth.cancel();
+    synth.speak(utterance);
+  }
+
+  function startReading(fromIndex) {
+    setPlayingUI(true);
+    speakBlock(fromIndex);
+  }
+
+  function stopReading() {
+    setPlayingUI(false);
+    synth.cancel();
+    clearHighlight();
+  }
+
+  playPauseBtn.addEventListener("click", function () {
+    if (isPlaying) {
+      stopReading();
+    } else {
+      startReading(currentIndex < 0 ? 0 : currentIndex);
+    }
+  });
+
+  prevBtn.addEventListener("click", function () {
+    var target = Math.max(0, (currentIndex < 0 ? 0 : currentIndex) - 1);
+    if (isPlaying) {
+      startReading(target);
+    } else {
+      currentIndex = target;
+      highlightBlock(blocks[target]);
+    }
+  });
+
+  nextBtn.addEventListener("click", function () {
+    var target = Math.min(
+      blocks.length - 1,
+      (currentIndex < 0 ? -1 : currentIndex) + 1,
+    );
+    if (isPlaying) {
+      startReading(target);
+    } else {
+      currentIndex = target;
+      highlightBlock(blocks[target]);
+    }
+  });
+
+  speedSelect.addEventListener("change", function () {
+    if (isPlaying) startReading(currentIndex);
+  });
+
+  voiceSelect.addEventListener("change", function () {
+    if (isPlaying) startReading(currentIndex);
+  });
+})();
+
+</script>
+</body>
+</html>
