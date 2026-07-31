@@ -35,8 +35,11 @@ under the relevant section as you find things. No process beyond that.
 - Firefox/AMO port as a possible free second channel (MV3 support in
   Firefox is not identical to Chrome's; needs a compatibility pass before
   committing to this).
-- `npx colophon <file.md>` CLI for local files, as a possible second
-  distribution form alongside the extension.
+- Watch mode with live reload for the edit-and-preview loop (CLI currently
+  requires a manual browser refresh after editing the markdown or CSS).
+- Decide whether to publish `colophon-cli` to npm. The package is ready
+  (`bin`, `engines`, `files` allowlist all in place) but publishing is
+  Sean's call, not yet made.
 
 ## Design Lens
 

@@ -1,14 +1,29 @@
 {
-  "name": "colophon",
-  "version": "0.3.0",
-  "private": true,
-  "description": "Chrome MV3 extension that turns raw markdown pages into a designed reader with a source/render split view and a Design Lens for any stylesheet the document links.",
+  "name": "colophon-cli",
+  "version": "0.4.0",
+  "description": "CLI and Chrome MV3 extension that turn a raw markdown page into a designed reader with a source/render split view and a Design Lens for any stylesheet the document links (including, via the CLI, ones it never links at all).",
+  "type": "module",
   "author": "Sean Smith <sean@seansmithdesign.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/seansmithworks/colophon.git"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "bin": {
+    "colophon": "./bin/colophon.mjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "extension/content",
+    "extension/styles/reader.css",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "sync-version": "node scripts/package.mjs --sync-only",
     "package": "node scripts/package.mjs"

@@ -292,7 +292,30 @@ window.ColophonLens = (function () {
   // Scans the already-rendered doc body for outbound .css / .svg links and
   // builds the Lens, fetching through the background worker (bypasses page
   // CSP). Returns "" (no lens) if nothing usable is found.
-  function build(docBodyEl) {
+  //
+  // `opts.source` is a context-agnostic seam: a caller that has already
+  // resolved CSS text itself (the CLI reads the filesystem directly, so it
+  // never needs to fetch through this extension's background relay) can
+  // hand that text straight to the Lens and skip the document-link-scan
+  // and fetch below entirely. `opts.fetchText` lets a caller swap in its
+  // own transport for the scan-and-fetch path (defaults to the extension's
+  // background-worker relay).
+  function build(docBodyEl, opts) {
+    opts = opts || {};
+
+    if (opts.source && typeof opts.source.text === "string") {
+      var directTokens = extractTokens(opts.source.text);
+      if (!directTokens.length) return Promise.resolve("");
+      var directModel = buildLensModel(
+        directTokens,
+        opts.source.label || "stylesheet",
+      );
+      if (directModel.extractedCount === 0) return Promise.resolve("");
+      return Promise.resolve(buildLensHtml(directModel, []));
+    }
+
+    var fetchText = opts.fetchText || fetchViaBackground;
+
     var links = Array.prototype.slice.call(
       docBodyEl.querySelectorAll("a[href]"),
     );
@@ -317,7 +340,7 @@ window.ColophonLens = (function () {
     var cssUrl = resolveUrl(cssLink);
     if (!cssUrl) return Promise.resolve("");
 
-    return fetchViaBackground(cssUrl).then(function (cssText) {
+    return fetchText(cssUrl).then(function (cssText) {
       if (!cssText) return "";
       var tokens = extractTokens(cssText);
       if (!tokens.length) return "";
@@ -330,7 +353,7 @@ window.ColophonLens = (function () {
       var assetPromises = svgLinks.map(function (href) {
         var url = resolveUrl(href);
         if (!url) return Promise.resolve(null);
-        return fetchViaBackground(url).then(function (svgText) {
+        return fetchText(url).then(function (svgText) {
           if (!svgText) return null;
           var dataUri = svgToDataUri(svgText);
           if (!dataUri) return null;

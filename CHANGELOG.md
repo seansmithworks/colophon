@@ -4,6 +4,39 @@ All notable changes to this project are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.0] - 2026-07-31
+
+### Added
+
+- CLI (`bin/colophon.mjs`, published as `colophon-cli`): `colophon <file.md>`
+  reads a markdown file, serves it on localhost, and opens the default
+  browser at that URL. Flags: `--port`, `--css` (repeatable), `--no-open`,
+  `--help`, `--version`. Serves on `http://localhost`, never a `file://`
+  page, so it works inside embedded browser panes (Ghostties, Claude
+  desktop, Cursor, Conductor, Codex) that restrict URL schemes.
+- Sibling stylesheet discovery: the CLI reads the filesystem directly to
+  find a design system's CSS even when the markdown document never links
+  it, the failure case the extension can't solve. Resolution order:
+  explicit `--css` paths, relative-path links in the markdown, absolute-URL
+  links in the markdown (fetched), then conventional file locations
+  (`globals.css`, `styles/globals.css`, `src/app/globals.css`,
+  `app/globals.css`, `src/styles/*.css`) walked up toward the repo root.
+  Reports which file armed the Design Lens and by which rule.
+- `package.json`: renamed to `colophon-cli`, no longer `private`, added
+  `bin`, `engines`, and a `files` allowlist. Zero runtime dependencies.
+
+### Changed
+
+- `extension/content/lens.js`: `build()` now takes an optional second
+  argument so a non-extension host can hand it already-resolved CSS text
+  directly (`opts.source`) or swap in its own fetch transport
+  (`opts.fetchText`), instead of always scanning the document for linked
+  stylesheets and fetching through the extension's background-worker relay.
+  Extension behavior is unchanged; this is the seam the CLI uses to reuse
+  the same token-extraction code without duplicating it.
+- `extension/content/reader.js`: passes a CLI-provided CSS source through
+  to the Lens when `window.__colophonCssSource` is set, otherwise unchanged.
+
 ## [0.3.0] - 2026-07-30
 
 ### Removed

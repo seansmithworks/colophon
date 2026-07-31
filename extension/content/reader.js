@@ -414,7 +414,15 @@
     // masthead. If the doc links no stylesheet (or the stylesheet defines
     // no usable tokens), this resolves to "" and nothing is added.
     var docBodyEl = root.querySelector("#colophon-doc-body");
-    window.ColophonLens.build(docBodyEl)
+    // window.__colophonCssSource is a seam a non-extension host (the CLI)
+    // can set before this file runs, handing the Lens already-resolved CSS
+    // text instead of relying on the document-link-scan + fetch path that
+    // only makes sense inside a browser extension. Unset in the extension,
+    // where the Lens falls back to its normal scan-and-fetch behavior.
+    var lensOpts = window.__colophonCssSource
+      ? { source: window.__colophonCssSource }
+      : undefined;
+    window.ColophonLens.build(docBodyEl, lensOpts)
       .then(function (lensHtml) {
         if (!lensHtml) return;
         var mount = root.querySelector("#colophon-lens-mount");

@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Colophon",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Turns raw markdown pages into a design-grade reader with a source/render split view and a Design Lens for the linked stylesheet.",
   "action": {
     "default_title": "Toggle Colophon",
@@ -21,8 +21,14 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["activeTab", "scripting", "storage"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "content_scripts": [
     {
       "matches": [
@@ -31,7 +37,9 @@
         "file:///*.md",
         "file:///*.markdown"
       ],
-      "js": ["content/detect.js"],
+      "js": [
+        "content/detect.js"
+      ],
       "run_at": "document_end",
       "all_frames": false
     }
