@@ -45,6 +45,14 @@ under the relevant section as you find things. No process beyond that.
 
 - Multi-source token extraction so the Lens arms on YAML frontmatter and
   markdown tables, not just linked stylesheets. Next major wave, planned.
+- **Drift detection.** Once two sources are read, compare them and surface
+  disagreements: the spec says `radius 2px`, the shipped `globals.css` says
+  `4px`, here is where. This is the one output no markdown reader can
+  produce, because renderers only ever have one file. It is also the only
+  feature that tells a reader something they did not already know, which is
+  the honest answer to "what can this do that a regular md reader cannot."
+  Depends on multi-source extraction landing first. Strong candidate to
+  become the product's framing, not just a feature.
 - "Source" theme mode: the reader body wears the document's declared
   palette and font stack instead of the reader's own type system.
 - Token specimen ramps for radius, shadow, motion, and grid, alongside the
